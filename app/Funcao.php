@@ -2,9 +2,9 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 
-class Cliente extends Model{
-
+class Funcao extends Model{
+    protected $table = 'funcoes';
     protected $fillable = [
-        'pessoa_id','limite_credito'
-    ];     
+        'descricao'
+    ];
 }

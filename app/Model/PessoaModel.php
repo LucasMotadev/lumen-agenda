@@ -15,21 +15,21 @@ class PessoaModel
 
     public function pessoaStore(Request $request)
     {
-        $pessoa = new Pessoa();
-        $pessoa->nome      = $request->nome;
-        $pessoa->codigo    = $request->codigo;
+        $pessoa             = new Pessoa();
+        $pessoa->nome       = $request->nome;
+        $pessoa->codigo     = $request->codigo;
         $pessoa->save();
-        $this->idPessoa = $pessoa->id;
+        $this->idPessoa     = $pessoa->id;
      
     }
     public function pessoaFisicaStore(Request $request)
     {
         $this->pessoaStore($request);
-        $pessoaFisica = new PessoasFisica();
-        $pessoaFisica->pessoa_id = $this->idPessoa;
-        $pessoaFisica->data_nascimento = $request->data_nascimento;
-        $pessoaFisica->rg = $request->rg;
-        $pessoaFisica->sexo = $request->sexo;
+        $pessoaFisica                   = new PessoasFisica();
+        $pessoaFisica->pessoa_id        = $this->idPessoa;
+        $pessoaFisica->data_nascimento  = $request->data_nascimento;
+        $pessoaFisica->rg               = $request->rg;
+        $pessoaFisica->sexo             = $request->sexo;
         $pessoaFisica->save();
     }
 
