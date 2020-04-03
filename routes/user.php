@@ -12,4 +12,6 @@
 */
 $router->group(['prefix' => 'user'], function () use ($router) {
     $router->post('store',  'Users\\UserController@create');
+    $router->post('reset',  'Users\\UserController@solicitResetPassword');
+   
 });

@@ -19,7 +19,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'name', 'email','apelido'
     ];
     protected $hidden = [
-        'password',
+        'password', 'remember_token'
     ];
     
     // Rest omitted for brevity
