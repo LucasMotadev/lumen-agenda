@@ -11,8 +11,8 @@ return [
             'database'  => env('DB_DATABASE_ORA', ''),
             'username'  => env('DB_USERNAME_ORA', ''),
             'password'  => env('DB_PASSWORD_ORA', ''),
-            'charset'   => '',
-            'prefix'    => ''
+            'charset'   => 'utf-8',
+            'collation' => 'utf8_general_ci'
         ],
         'mysql' => [
             

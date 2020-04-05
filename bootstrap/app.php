@@ -118,6 +118,9 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
     require __DIR__.'/../routes/pessoa.php';
     require __DIR__.'/../routes/user.php';
+    require __DIR__.'/../routes/status.php';
+    require __DIR__.'/../routes/categoria.php';
+    require __DIR__.'/../routes/servico.php';
 });
 
 return $app;

@@ -44,7 +44,6 @@ class Email
             }
         }
 
-  
     }
 
     private function addAnexo($anexo)
@@ -58,14 +57,11 @@ class Email
 
                 $this->email->addAddress($value); // Add a recipient
             }
-        }    
-
-        
+        }         
     }
 
     public function send($destinatario, $assunto, $messagem = 'messagem')
     {
-
         try {
             $this->email->setFrom('lukasmotta.8@hotmail.com', 'Geraldo Lucas Mota de Oliveira');
             $this->addDestinatarios($destinatario);
