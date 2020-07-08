@@ -12,4 +12,5 @@
 */
 $router->group(['prefix' => 'pessoa'], function () use ($router) {
     $router->post('store',  'PessoaController@store');
+    $router->get('store',  'PessoaController@show');
 });

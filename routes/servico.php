@@ -10,7 +10,13 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-$router->post('servico', 'ServicoController@store');
-$router->get('servico', 'ServicoController@show');
-$router->put('servico', 'ServicoController@update');
+$router->group(['prefix' => 'servico', 'middleware' => 'auth'], function () use ($router) {
+
+    $router->post('/', 'ServicoController@store');
+    $router->get('/', 'ServicoController@show');
+    $router->put('/', 'ServicoController@update');
+    $router->delete('/', 'ServicoController@delete');
+
+});
+
 

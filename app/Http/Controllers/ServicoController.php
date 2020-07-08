@@ -25,7 +25,6 @@ class ServicoController extends Controller
             $where = [];
             foreach ($request->all() as $key => $value) {
               $where[$key] = $value;  
-
             }
 
             $servico = DB::table('vw_servico')->where($where);
@@ -48,13 +47,13 @@ class ServicoController extends Controller
             'required' => 'O campo :attribute é obrigatório',
             'unique' => 'O servico :attribute já esta cadastrado',
         ], [
-            'descricao'      => $request->descricao,
-            'categoria_id'     => 'Categoria',
-            'tempo_execulcao'  => 'Tempo Duração',
+            'descricao'         => $request->descricao,
+            'categoria_id'      => 'Categoria',
+            'tempo_execulcao'   => 'Tempo Duração',
         ]);
 
         try {
-
+          //  return 'teste';
             $servico = new Servico();
             $servico->descricao = $request->descricao;
             $servico->tempo_execulcao = $request->tempo_execulcao;
@@ -69,22 +68,46 @@ class ServicoController extends Controller
     }
 
     public function update(Request $request){
-
+        
+        $this->validate($request,[
+            'servico_id' => 'required',
+            'categoria_id' => 'required'
+           
+        ],[
+            'required' => 'O campo :attribute é obrigatório',
+    
+        ], [
+            'servico_id'   => 'Descricao ',
+            'categoria_id' => 'Categoria'
+            
+        ]);
+       
        try {
-        $servico = Servico::find($request->id);
+        $servico = Servico::find($request->servico_id);
         
         $servico->descricao = $request->descricao;
         $servico->tempo_execulcao = $request->tempo_execulcao;
         $servico->tempo_ocioso = $request->tempo_ocioso;
         $servico->valor = $request->valor;
         $servico->categoria_id = $request->categoria_id;
-        $servico->update();
+        $servico->save();
 
         return response()->json(['success' => 'Dados atualizados']);
        } catch (\Exception $e) {
          return response()->json(['error' => 'Erro ao atualizar: '. $e->getMessage()], 400);
        }
         
+    }
+
+    public function delete(Request $request){
+
+        try {
+            $servico = Servico::find($request->id);
+            $servico->delete();
+            return response()->json(['success' => 'Servico deletado com sucesso!' ]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Erro ao deletar Servico!' ]);
+        }
     }
 
     //
