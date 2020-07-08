@@ -1,78 +1,99 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Model\PessoaModel;
-use App\Utils\Email;
+
+use App\Model\Cliente;
+use App\Model\Pessoa;
+use App\Model\Telefone;
+use App\Model\Email;
+use App\Model\PessoasFisica;
+use App\Model\PessoasJuridica;
+use App\Model\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class PessoaController extends AuthController
 {
+    private $idPessoa;
+    public function show(){
+        try {
+            
+            $pessoa =  Pessoa::all();
+            return response()->json($pessoa);
+            
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
 
     public function store(Request $request)
     {
         try {
+
             DB::beginTransaction();
-            $pessoa = new PessoaModel();
-            $pessoa->store($request);
-            $request->password = 'senha_padrao_para_pre_cadastro_de_usuarios';
-            $token = $this->login($request);
-        
-            if($token->original['token']){
-                $this->emailConfirmacao($request, $token->original['token']);  
-                DB::commit();
-                return response()->json(['success' => 'Pessoas casdastrada, cheque sua caixa de entrada!'],201);
-            }
-           DB::rollback();
-           throw new Exception('Error ao cadastrar ente mais tarde!');
+
+            $pessoa             = new Pessoa();
+            $pessoa->nome       = $request->nome;
+            $pessoa->codigo     = $request->codigo;
+            $pessoa->save();
+            $this->idPessoa = $pessoa->id;
+            
+            $telefone = new Telefone();
+            $telefone->numero = $request->numero;
+            $telefone->pessoa_id =  $pessoa->id;
+            $telefone->save();
+
+            $email = new Email();
+            $email->email       = $request->email;
+            $email->pessoa_id   = $pessoa->id;
+            $email->save();
+
+            $cliente = new Cliente();
+            $cliente->pessoa_id = $pessoa->id;
+            $cliente->limite_credito = 00.00;
+            $cliente->save();
+
+            $user = new User();
+            $user->pessoa_id = $pessoa->id;
+            $user->apelido = $request->apelido;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            $codigo  = preg_replace('/\W/', '', $request->codigo);
+            if (strlen($codigo) == 11) return $this->pessoaFisicaStore($request);
+            if (strlen($codigo) == 14) return $this->pessoaJuridicaStore($request);
+            
+            
+            DB::commit();
+          
+           return response()->json(['success' => 'Pessoa cadastrada com sucesso!']);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['error' => $e->getMessage()],400);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
-    public function emailConfirmacao(Request $request,$token){
 
-        $email = new Email([
-            'server' => 'smtp.live.com',
-            'user'   => 'lukasmotta.8@hotmail.com',
-            'pw'     => 'lukas@vidaloka157',
-            'port'   => 587      
-        ]);
-
-
-         $msg = ' 
-            <html>
-                <header>
-                    <h3>Confirmação de Cadastro</h3>
-                </header>
-                <p >Caso não tenha solicitado, por gentileza iguinorar esse email!</p>
-                <body>
-                        <div class="card text-center">
-                            <div class="card-header">
-                            Confimação de Cadastro
-                            </div>
-                            <div class="card-body">
-                            <h5 class="card-title">Barberaria doBlack</h5>
-                            <p class="card-text">Clink no link para cofirmar o cadastro!</p>
-                            <a href="http://10.0.0.100:8080/reset/password/'.$token.'" class="btn btn-primary">Confirmar</a>
-                            </div>
-                        <div class="card-footer text-muted">
-                          Data da Solicitação: 
-                        </div>
-                      </div>
-                </<body>
-            </htm>
-            <style>
-
-            </style>
-       
-        ';
-
-        $email->send($request->email,'Confirmação de Cadastro',$msg);
-
+    public function pessoafisicaStore(Request $request)
+    {
+        $pessoaFisica                   = new PessoasFisica();
+        $pessoaFisica->pessoa_id        = $this->idPessoa;
+        $pessoaFisica->data_nascimento  = $request->data_nascimento;
+        $pessoaFisica->rg               = $request->rg;
+        $pessoaFisica->sexo_id          = $request->sexo;
+        $pessoaFisica->save();
     }
+
+
+    public function pessoaJuridicaStore(Request $request)
+    {   
+        $pessoaJuridica = new PessoasJuridica();
+        $pessoaJuridica->nome_fantasia = $request->nome_fantasia;
+        $pessoaJuridica->pessoa_id = $this->idPessoa;
+        $pessoaJuridica->save();
+    }
+  
 }
