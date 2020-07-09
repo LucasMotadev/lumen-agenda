@@ -9,7 +9,7 @@ class Pessoa extends Model
 {
 
     protected $fillable = [
-        'nome', 'codigo', 'pessoa_tipo_id'
+        'nome', 'codigo', 'data_nascimento','pessoa_tipo_id'
     ];
 
     public function setNomeAttribute($value)

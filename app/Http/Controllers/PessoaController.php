@@ -19,8 +19,10 @@ class PessoaController extends AuthController
     private $idPessoa;
     public function show(){
         try {
-            
-            $pessoa =  Pessoa::all();
+            $table = DB::table('vw_pessoas');
+
+
+            $pessoa =  $table->get();
             return response()->json($pessoa);
             
         } catch (\Exception $e) {
@@ -34,9 +36,10 @@ class PessoaController extends AuthController
 
             DB::beginTransaction();
 
-            $pessoa             = new Pessoa();
-            $pessoa->nome       = $request->nome;
-            $pessoa->codigo     = $request->codigo;
+            $pessoa                     = new Pessoa();
+            $pessoa->nome               = $request->nome;
+            $pessoa->codigo             = $request->codigo;
+            $pessoa->data_nascimento    = $request->data_nascimento; 
             $pessoa->save();
             $this->idPessoa = $pessoa->id;
             
