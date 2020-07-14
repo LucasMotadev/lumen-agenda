@@ -20,6 +20,13 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 
 });
 
+$router->group(['prefix' => 'teste'], function () use ($router) {
+
+    $router->get('agenda',  'Teste@horariosDisponiveis');
+
+
+});
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
