@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default' => 'mysql',
+    'default' => env('DB_CONNECTION'),
     'migrations' => 'migrations',
     'connections' => [
         'oracle' => [

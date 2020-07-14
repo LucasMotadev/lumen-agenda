@@ -22,7 +22,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 
 $router->group(['prefix' => 'teste'], function () use ($router) {
 
-    $router->get('agenda',  'Teste@horariosDisponiveis');
+    $router->get('agenda',  'Teste@horariosDisponiveis2');
 
 
 });
