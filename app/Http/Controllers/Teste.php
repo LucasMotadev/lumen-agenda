@@ -35,8 +35,10 @@ class Teste extends Controller
                 *
                 FROM agendamento 
                 where 1=1
-                and '2020-07-13 $value->horario_para_inicio'   between data_inicio and data_fim
-                or '2020-07-13 $value->horairo_para_termino'   between data_inicio and data_fim
+                and '2020-07-13 $value->horario_para_inicio'    between data_inicio and data_fim
+                or  '2020-07-13 $value->horairo_para_termino'   between data_inicio and data_fim
+                or  '2020-07-13 $value->horairo_para_termino'   between '2020-07-13 17:00:00' and '2020-07-14 07:59:00'
+                or  '2020-07-13 $value->horario_para_inicio '   between '2020-07-13 17:00:00' and '2020-07-14 07:59:00'
             
                 ");
              
