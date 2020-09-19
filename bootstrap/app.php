@@ -4,10 +4,11 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
-))->bootstrap();
-
-date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
-
+    ))->bootstrap();
+    
+   // date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
+    
+    
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -115,12 +116,11 @@ $app->routeMiddleware([
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
-    require __DIR__.'/../routes/pessoa.php';
-    require __DIR__.'/../routes/user.php';
-    require __DIR__.'/../routes/status.php';
-    require __DIR__.'/../routes/categoria.php';
-    require __DIR__.'/../routes/servico.php';
+
+    $files = scandir('../routes/');
+    foreach ($files as  $value) {
+        if($value != '.' &&  $value != '..') require __DIR__."/../routes/$value";
+    }
 });
 
 return $app;
