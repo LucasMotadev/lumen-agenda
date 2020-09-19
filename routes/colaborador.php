@@ -10,6 +10,6 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-$router->group(['prefix' => 'status/agendamento'], function () use ($router) {
-    $router->get('list',  'AgengamentoStatusController@show');
+$router->group(['prefix' => 'colaborador'], function () use ($router) {
+    $router->get('/',  'ColaboradorController@show');
 });

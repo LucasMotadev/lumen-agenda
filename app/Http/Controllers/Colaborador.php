@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-class Colaborador extends Controller
+use App\Model\Colaborador;
+
+class ColaboradorController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -11,7 +13,7 @@ class Colaborador extends Controller
      */
     public function __construct()
     {
-        //
+        parent::__construct(Colaborador::class);
     }
 
     //
