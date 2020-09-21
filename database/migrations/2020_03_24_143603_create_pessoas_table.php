@@ -17,6 +17,7 @@ class CreatePessoasTable extends Migration
             $table->id();
             $table->string('nome');
             $table->string('codigo')->unique();
+            $table->integer('tipo_pessoa_id');
             $table->timestamps();
         });
     }

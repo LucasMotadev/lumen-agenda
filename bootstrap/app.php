@@ -116,11 +116,14 @@ $app->routeMiddleware([
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-
-    $files = scandir('../routes/');
-    foreach ($files as  $value) {
-        if($value != '.' &&  $value != '..') require __DIR__."/../routes/$value";
-    }
+    require __DIR__."/../routes/index.php";   
 });
+
+$app->router->group([
+    'namespace' => 'App\Construct',
+], function ($router) {
+    require __DIR__."/../app/Construct/router.php";   
+});
+
 
 return $app;

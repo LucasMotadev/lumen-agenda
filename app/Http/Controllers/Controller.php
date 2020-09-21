@@ -16,6 +16,7 @@ abstract class Controller extends BaseController
     }
 
     public function show($id){
+        
         return response()->json($this->class::find($id), 200);
 
     }
