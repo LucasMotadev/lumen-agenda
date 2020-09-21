@@ -3,15 +3,12 @@
 use App\Utils\Url;
 
 $router->group(['prefix' => 'base'], function () use ($router) {
+  $route = Url::uriToMethod($_SERVER['REQUEST_URI']);
 
-    $route = Url::uriToMethod($_SERVER['REQUEST_URI']);
-    $method = ucfirst($route);
-
-    $router->get($route .    '/{id}',    "{$method}Controller@show");
-    $router->put($route .    '/{id}',    "{$method}Controller@update");
-    $router->delete($route . '/{id}',    "{$method}Controller@delete");
-    $router->get($route .    '/',        "{$method}Controller@showAll");
-    $router->post($route .   '/',        "{$method}Controller@create");  
-    
+  $router->get($route .    '/{id}',    "BaseController@show");
+  $router->put($route .    '/{id}',    "BaseController@update");
+  $router->delete($route . '/{id}',    "BaseController@delete");
+  $router->get($route .    '/',        "BaseController@showAll");
+  $router->post($route .   '/',        "BaseController@create");
+  
 });
-

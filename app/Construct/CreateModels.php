@@ -6,95 +6,93 @@ use Exception;
 
 class CreateModels
 {
-    public function models()
-    {
+  public function models()
+  {
 
-        $model = Columns::where('table_schema', 'database')
-            ->orderBy('table_name')
-            ->get()
-            ->toArray();
+    $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'))
+      ->orderBy('table_name')
+      ->get()
+      ->toArray();
 
-        $tables = $this->groupColumn($model);
+    $tables = $this->groupColumn($model);
 
-        $this->getStringClass($tables);
-    }
-
-
+    $this->getStringClass($tables);
+  }
 
 
-    private function getStringClass($arr = [])
-    {
-        $arrModels = [];
 
-        $lineTable = '';
-        $lineColumn =  '';
-        $linePrimaryKey = '';
-        $fkonToAll = '';
-        $fkoneToOne = '';
-        $lineGurad = '';
-        $functionGetPrimariky = '';
 
-        foreach ($arr as $table => $columns) {
-            $lineTable =  '     protected $table = "' . $table . '";';
+  private function getStringClass($arr = [])
+  {
+    $arrModels = [];
 
-            $functionGetPrimariky = '     public function getPrimaryKey(){
+    $lineTable = '';
+    $lineColumn =  '';
+    $linePrimaryKey = '';
+    $fkonToAll = '';
+    $fkoneToOne = '';
+    $lineGurad = '';
+    $functionGetPrimariky = '';
+
+    foreach ($arr as $table => $columns) {
+      $lineTable =  '     protected $table = "' .  strtolower($table) . '";';
+
+      $functionGetPrimariky = '     public function getPrimaryKey(){
                 return $this->primaryKey;
             }';
-            foreach ($columns as  $column) {
+      foreach ($columns as  $column) {
 
-                $lineColumn .=  "'$column',";
+        $lineColumn .=  "'" . strtolower($column) . "',";
 
-                $modelPrimaryKey = keys::where('table_schema', 'database')
-                    ->where('table_name', $table)
-                    ->where('column_name', $column)
-                    ->get()
-                    ->toArray();
+        $modelPrimaryKey = keys::where('table_schema', env('DB_DATABASE_MYSQL'))
+          ->where('table_name', $table)
+          ->where('column_name', $column)
+          ->get()
+          ->toArray();
 
-                foreach ($modelPrimaryKey as  $value) {
+        foreach ($modelPrimaryKey as  $value) {
 
-                    if ($value['CONSTRAINT_NAME'] == 'PRIMARY') $linePrimaryKey =  '     protected $primaryKey = "' . $column . '";';
+          if ($value['CONSTRAINT_NAME'] == 'PRIMARY') $linePrimaryKey =  '     protected $primaryKey = "' . strtolower($column) . '";';
 
-                    $fk = strpos($value['CONSTRAINT_NAME'], 'fk');
-                    if ($fk !== false) {
+          $fk = strpos($value['CONSTRAINT_NAME'], 'fk');
+          if ($fk !== false) {
 
-                        $fkoneToOne .= '     public function ' . $this->methodToCamelcase($value['REFERENCED_TABLE_NAME']) . '()
+            $fkoneToOne .= '     public function ' . $this->methodToCamelcase($value['REFERENCED_TABLE_NAME']) . '()
                         {
-                            return $this->belongsTo("App\Models\Tables", "' . $value['COLUMN_NAME'] . '","' . $value['REFERENCED_COLUMN_NAME'] . '");
+                            return $this->belongsTo("App\Models\Tables", "' . strtolower($value['COLUMN_NAME']) . '","' . strtolower($value['REFERENCED_COLUMN_NAME']) . '");
                         }
                           
                         ';
-                    }
-                }
+          }
+        }
 
-                $modelForenKey = keys::where('table_schema', 'database')
-                    ->where('referenced_table_name', $table)
-                    ->where('referenced_column_name', $column)
-                    ->get()
-                    ->toArray();
+        $modelForenKey = keys::where('table_schema', env('DB_DATABASE_MYSQL'))
+          ->where('referenced_table_name', $table)
+          ->where('referenced_column_name', $column)
+          ->get()
+          ->toArray();
 
-                foreach ($modelForenKey as  $value) {
+        foreach ($modelForenKey as  $value) {
 
-                    $fkonToAll .= '     public function ' . $this->methodToCamelcase($value['TABLE_NAME']) . '()
+          $fkonToAll .= '     public function ' . $this->methodToCamelcase($value['TABLE_NAME']) . '()
                     {
-                        return $this->hasMany(' . '"App\Models\Tables"' . " ,'{$value['COLUMN_NAME']}', '{$value['REFERENCED_COLUMN_NAME']}' " . ');
-                    }
-                    
-                    ';
-                }
-            }
+                        return $this->hasMany("App\Models\Tables", "' . strtolower($value['COLUMN_NAME']) . '","' . strtolower($value['REFERENCED_COLUMN_NAME']) . '");
+                    }';
+        }
+      }
 
 
-            $lineColumn = substr($lineColumn, 0, -1);;
-            $lineFillable = '     protected $fillable = [' . $lineColumn . '];';
+      $lineColumn = substr($lineColumn, 0, -1);;
+      $lineFillable = '     protected $fillable = [' . $lineColumn . '];';
 
-            $stryngClass = "<?php
+      $stryngClass = "<?php
 
     namespace App\Model\Tables;
 
     use Illuminate\Database\Eloquent\Model;
-    use ModelInterface;
+    
 
-    class {$this->classToCamelcase($table)} extends Model implements ModelInterface {
+    class {$this->classToCamelcase($table)} extends Model {
 
         $lineTable
 
@@ -110,60 +108,68 @@ class CreateModels
         $fkoneToOne
 
     }";
-            $this->createFileModel(base_path("app/Model/Tables/{$this->classToCamelcase($table)}.php"), $stryngClass);
+      $this->createFileModel(base_path("app/Model/Tables/{$this->classToCamelcase($table)}.php"), $stryngClass);
 
-            $lineColumn = '';
-            $fkonToAll = '';
-            $fkoneToOne = '';
-        }
-
-        return $arrModels;
+      $lineColumn = '';
+      $fkonToAll = '';
+      $fkoneToOne = '';
     }
 
-    private function groupColumn($arr = [])
-    {
+    return $arrModels;
+  }
 
-        $table = [];
-        foreach ($arr as $value) {
-            if (empty($table[$value['TABLE_NAME']])) $table[$value['TABLE_NAME']] = [];
-            array_push($table[$value['TABLE_NAME']], $value['COLUMN_NAME']);
-        }
+  private function groupColumn($arr = [])
+  {
 
-        return $table;
+    $table = [];
+    foreach ($arr as $value) {
+      if (empty($table[$value['TABLE_NAME']])) $table[$value['TABLE_NAME']] = [];
+      array_push($table[$value['TABLE_NAME']], $value['COLUMN_NAME']);
     }
 
-    private function classToCamelcase($name)
-    {
+    return $table;
+  }
 
-        $arrName = explode('_', strtolower($name));
+  private function classToCamelcase($name)
+  {
 
-        $newName = ucfirst($arrName[0]);
-        if (isset($arrName[1])) $newName .= ucfirst($arrName[1]);
+    $arrName = explode('_', strtolower($name));
+    $newName = '';
 
-        return $newName;
+    foreach ($arrName as  $value) {
+      $newName .= ucfirst($value);
     }
 
-    private function methodToCamelcase($name)
-    {
+    return $newName;
+  }
 
-        $arrName = explode('_', strtolower($name));
+  private function methodToCamelcase($name)
+  {
 
-        $newName = $arrName[0];
-        if (isset($arrName[1])) $newName .= ucfirst($arrName[1]);
+    $arrName = explode('_', strtolower($name));
+    $newName = '';
+    foreach ($arrName as $key => $value) {
 
-        return $newName;
+      if ($key === 0) {
+        $newName = $value;
+      } else {
+
+        $newName .= ucfirst($value);
+      }
     }
 
+    return $newName;
+  }
 
 
-    private function createFileModel($filename, $data)
-    {
+  private function createFileModel($filename, $data)
+  {
 
-        if (file_exists($filename)) throw new Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}, o arquivo já existe");
-        $arquivo = fopen($filename, 'w');
-        if (!$arquivo) throw new Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}");
-        fwrite($arquivo, $data);
-        //Fechamos o arquivo após escrever nele
-        fclose($arquivo);
-    }
+    if (file_exists($filename)) throw new Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}, o arquivo já existe");
+    $arquivo = fopen($filename, 'w');
+    if (!$arquivo) throw new Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}");
+    fwrite($arquivo, $data);
+    //Fechamos o arquivo após escrever nele
+    fclose($arquivo);
+  }
 }

@@ -12,12 +12,13 @@ abstract class Controller extends BaseController
 
     public function __construct($model)
     {   
-        $this->class = $model;
+        $this->class = new $model();
     }
 
     public function show($id){
-        
-        return response()->json($this->class::find($id), 200);
+    
+      $response = $this->class::where($this->class->getPrimaryKey(), $id)->get();
+      return response()->json($response , 200);
 
     }
 
