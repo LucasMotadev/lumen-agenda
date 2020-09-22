@@ -3,6 +3,7 @@
 use App\Utils\Url;
 
 $router->group(['prefix' => 'base'], function () use ($router) {
+  
   $route = Url::uriToMethod($_SERVER['REQUEST_URI']);
 
   $router->get($route .    '/{id}',    "BaseController@show");
