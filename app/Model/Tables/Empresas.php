@@ -10,7 +10,7 @@
     
             protected $fillabe = ["id","pessoa_juridica_id","apelido","empresa_matriz_id"];
     
-            protected $primaryKey = "primary";
+            protected $primaryKey = "id";
 
             
 

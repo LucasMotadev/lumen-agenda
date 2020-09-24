@@ -1,38 +1,33 @@
 <?php
-        namespace App\Model\Tables;
 
-        use Illuminate\Database\Eloquent\Model;
+namespace App\Model\Tables;
 
-        class Colaboradores extends Model 
-        {
+use Illuminate\Database\Eloquent\Model;
 
-            protected $table = "colaboradores";
-    
-            protected $fillabe = ["id","pessoa_fisica_id","centro_custo_id","funcao_id"];
-    
-            protected $primaryKey = "primary";
+class Colaboradores extends Model
+{
 
-            
+    protected $table = "colaboradores";
 
-            public function setPrimaryKey()
-            { 
-                return $this->primaryKey;
-            }
-    
-            
-    
-            public function pessoasFisicas()
-            {
-                return $this->belongsTo("App\Model\Tabels", "pessoa_fisica_id","id");
-            }
-                          
-        public function funcao()
-            {
-                return $this->belongsTo("App\Model\Tabels", "funcao_id","id");
-            }
-                          
-        
-                   
-        }
-        
-        
+    protected $fillabe = ["id", "pessoa_fisica_id", "centro_custo_id", "funcao_id"];
+
+    protected $primaryKey = "id";
+
+
+
+    public function setPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+
+    public function pessoasFisicas()
+    {
+        return $this->belongsTo("App\Model\Tabels", "pessoa_fisica_id", "id");
+    }
+
+    public function funcao()
+    {
+        return $this->belongsTo("App\Model\Tabels", "funcao_id", "id");
+    }
+}

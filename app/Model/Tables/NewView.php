@@ -1,28 +1,20 @@
 <?php
-        namespace App\Model\Tables;
 
-        use Illuminate\Database\Eloquent\Model;
+namespace App\Model\Tables;
 
-        class NewView extends Model 
-        {
+use Illuminate\Database\Eloquent\Model;
 
-            protected $table = "new_view";
-    
-            protected $fillabe = ["id","descricao"];
-    
-            
+class NewView extends Model
+{
 
-            
+    protected $table = "new_view";
 
-            public function setPrimaryKey()
-            { 
-                return $this->primaryKey;
-            }
-    
-            
-    
-            
-                   
-        }
-        
-        
+    protected $fillabe = ["id", "descricao"];
+
+
+
+    public function setPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+}

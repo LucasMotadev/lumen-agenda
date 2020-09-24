@@ -10,7 +10,7 @@
     
             protected $fillabe = ["permission_id","grupo_user_id"];
     
-            protected $primaryKey = "primary";
+            protected $primaryKey = "grupo_user_id";
 
             
 

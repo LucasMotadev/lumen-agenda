@@ -1,33 +1,27 @@
 <?php
-        namespace App\Model\Tables;
 
-        use Illuminate\Database\Eloquent\Model;
+namespace App\Model\Tables;
 
-        class Funcao extends Model 
-        {
+use Illuminate\Database\Eloquent\Model;
 
-            protected $table = "funcao";
-    
-            protected $fillabe = ["id","descricao","created_at","updated_at"];
-    
-            protected $primaryKey = "primary";
+class Funcao extends Model
+{
 
-            
+    protected $table = "funcao";
 
-            public function setPrimaryKey()
-            { 
-                return $this->primaryKey;
-            }
-    
-            public function colaboradores()
-            {
-                return $this->hasMany("App\Models\Tables", "funcao_id","id");
-            }
-                          
-        
-    
-            
-                   
-        }
-        
-        
+    protected $fillabe = ["id", "descricao", "created_at", "updated_at"];
+
+    protected $primaryKey = "id";
+
+
+
+    public function setPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    public function colaboradores()
+    {
+        return $this->hasMany("App\Models\Tables", "funcao_id", "id");
+    }
+}

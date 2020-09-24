@@ -1,38 +1,34 @@
 <?php
-        namespace App\Model\Tables;
 
-        use Illuminate\Database\Eloquent\Model;
+namespace App\Model\Tables;
 
-        class Cidades extends Model 
-        {
+use Illuminate\Database\Eloquent\Model;
 
-            protected $table = "cidades";
-    
-            protected $fillabe = ["id","estado_id","cep"];
-    
-            protected $primaryKey = "primary";
+class Cidades extends Model
+{
 
-            
+    protected $table = "cidades";
 
-            public function setPrimaryKey()
-            { 
-                return $this->primaryKey;
-            }
-    
-            public function ruas()
-            {
-                return $this->hasMany("App\Models\Tables", "cidade_id","id");
-            }
-                          
-        
-    
-            public function estados()
-            {
-                return $this->belongsTo("App\Model\Tabels", "estado_id","id");
-            }
-                          
-        
-                   
-        }
-        
-        
+    protected $fillabe = ["id", "estado_id", "cep"];
+
+    protected $primaryKey = "id";
+
+
+
+    public function setPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    public function ruas()
+    {
+        return $this->hasMany("App\Models\Tables", "cidade_id", "id");
+    }
+
+
+
+    public function estados()
+    {
+        return $this->belongsTo("App\Model\Tabels", "estado_id", "id");
+    }
+}

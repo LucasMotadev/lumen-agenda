@@ -64,7 +64,7 @@ class CreateModels  extends BaseCreate
 
                 foreach ($modelPrimaryKey as  $value) {
 
-                    if ($value['CONSTRAINT_NAME'] == 'PRIMARY') $this->Model->setPrimaryKey($value['CONSTRAINT_NAME']);
+                    if ($value['CONSTRAINT_NAME'] == 'PRIMARY') $this->Model->setPrimaryKey($value['COLUMN_NAME']);
 
                     $fk = strpos($value['CONSTRAINT_NAME'], 'fk');
                     if ($fk !== false) {

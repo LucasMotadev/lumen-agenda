@@ -1,4 +1,5 @@
-$router->group(["prefix" => "NewView"], function () use ($router) {
+<?php 
+       $router->group(["prefix" => "NewView"], function () use ($router) {
 
             $router->get("/{id}",           "NewViewController@show");
             $router->get("/" ,              "NewViewController@showAll");

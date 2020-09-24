@@ -1,4 +1,5 @@
-$router->group(["prefix" => "PessoasJuridicas"], function () use ($router) {
+<?php 
+       $router->group(["prefix" => "PessoasJuridicas"], function () use ($router) {
 
             $router->get("/{id}",           "PessoasJuridicasController@show");
             $router->get("/" ,              "PessoasJuridicasController@showAll");

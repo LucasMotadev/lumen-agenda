@@ -9,7 +9,8 @@ class Router extends Utils {
 
     public function setRouterGroup($prefix){
 
-       $this->routerGroup =  '$router->group(["prefix" => "'.$prefix.'"], function () use ($router) {
+       $this->routerGroup =  '<?php 
+       $router->group(["prefix" => "'.$prefix.'"], function () use ($router) {
 
             $router->get("/{id}",           "'.$prefix.'Controller@show");
             $router->get("/" ,              "'.$prefix.'Controller@showAll");

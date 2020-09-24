@@ -10,7 +10,7 @@
     
             protected $fillabe = ["id","cpf","rg","nome","sexo","created_at","updated_at","pessoa_id"];
     
-            protected $primaryKey = "primary";
+            protected $primaryKey = "id";
 
             
 

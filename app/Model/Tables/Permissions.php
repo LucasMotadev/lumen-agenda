@@ -10,7 +10,7 @@
     
             protected $fillabe = ["id","descricao","tipo","permission_pai_id"];
     
-            protected $primaryKey = "primary";
+            protected $primaryKey = "id";
 
             
 
