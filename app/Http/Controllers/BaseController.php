@@ -11,7 +11,6 @@ class BaseController extends Controller
   {
     dd($request);
     $method = ucfirst(Url::uriToMethod($request->getRequestUri()));
-
     parent::__construct("App\\Model\\Tables\\$method");
   }
 }

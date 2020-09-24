@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Construct;
+namespace App\Construct\Files;
 
 class Model extends Utils
 {
-    public $table = '';
-    public $fillabe = '';
-    public $primaryKey = '';
-    public $timestamps = '';
-    public $hasMany = '';
-    public $belongsTo = '';
-    public $functionPk;
+    private $table = '';
+    private $fillabe = '';
+    private $primaryKey = '';
+    private $timestamps = '';
+    private $hasMany = '';
+    private $belongsTo = '';
+    private $functionPk;
 
 
 
@@ -28,10 +28,10 @@ class Model extends Utils
     {
 
         $this->primaryKey = 'protected $primaryKey = "' . strtolower($column) . '";';
-
     }
 
-    public function setFunctionPk(){
+    public function setFunctionPk()
+    {
         $this->functionPk = 'public function setPrimaryKey()
             { 
                 return $this->primaryKey;
@@ -44,11 +44,11 @@ class Model extends Utils
     }
 
     // um para muitos ou passar o parametro where  , um use pode ter varios telefones
-    public function setHasMany(string $table, string $namespace , string $columnLocal, string $columnPai)
+    public function setHasMany(string $table, string $namespace, string $columnLocal, string $columnPai)
     {
         $this->hasMany .= 'public function ' . $this->methodToCamelcase($table)  . '()
             {
-                return $this->hasMany("'.$namespace.'", "' . strtolower($columnLocal) . '","' . strtolower($columnPai) . '");
+                return $this->hasMany("' . $namespace . '", "' . strtolower($columnLocal) . '","' . strtolower($columnPai) . '");
             }
                           
         ';
@@ -56,18 +56,19 @@ class Model extends Utils
 
 
     // um para um ou um para muitos inverso, acessar o dono do telefone
-    public function setBelongsTo(string $table, string $namespace , string $columnLocal, string $columnPai)
+    public function setBelongsTo(string $table, string $namespace, string $columnLocal, string $columnPai)
     {
 
         $this->belongsTo .= 'public function ' . $this->methodToCamelcase($table)  . '()
             {
-                return $this->belongsTo("'.$namespace.'", "' . strtolower($columnLocal) . '","' . strtolower($columnPai) . '");
+                return $this->belongsTo("' . $namespace . '", "' . strtolower($columnLocal) . '","' . strtolower($columnPai) . '");
             }
                           
         ';
     }
 
-    public function getClass(string $namespace, string $nameClass){
+    public function getClass(string $namespace, string $nameClass)
+    {
 
         return "<?php
         namespace $namespace;
@@ -83,6 +84,8 @@ class Model extends Utils
     
             {$this->primaryKey}
 
+            {$this->timestamps}
+
             {$this->functionPk}
     
             {$this->hasMany}
@@ -92,19 +95,17 @@ class Model extends Utils
         }
         
         ";
-
     }
 
-    public function destroy(){
-        
-         $this->table = '';
-         $this->fillabe = '';
-         $this->primaryKey = '';
-         $this->timestamps = '';
-         $this->hasMany = '';
-         $this->belongsTo = '';
-         $this->functionPk = '';
+    public function destroy()
+    {
 
+        $this->table = '';
+        $this->fillabe = '';
+        $this->primaryKey = '';
+        $this->timestamps = '';
+        $this->hasMany = '';
+        $this->belongsTo = '';
+        $this->functionPk = '';
     }
-
 }

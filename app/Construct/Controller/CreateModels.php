@@ -1,12 +1,23 @@
 <?php
 
-namespace App\Construct;
+namespace App\Construct\Controller;
 
+use App\Construct\Model\Columns;
+use App\Construct\Model\keys;
+use App\Construct\Files\Model;
+use App\Construct\Files\Router;
 use Exception;
 
-class CreateModels extends Model
+class CreateModels  extends BaseCreate
 {
-    public function models()
+    private $Model;
+    private $Router;
+    public function __construct()
+    {
+        $this->Model = new Model();
+        $this->Router = new Router();
+    }
+    public function create()
     {
 
         $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'))
@@ -15,21 +26,33 @@ class CreateModels extends Model
             ->toArray();
 
         $tables = $this->groupColumn($model);
-
-        return response()->json($this->getStringClass($tables), 200);
+        
+        dd($this->getStringClass($tables));
     }
-
-
 
     private function getStringClass($arr = [])
     {
         $arrModels = [];
-
+        $arrRouters = [];
+        $filePath = "app/Model/Tables/"; // filename save file
+        $nameSpaceModel = ucfirst(str_replace('/','\\',substr( $filePath, 0 , -1)));
+    
         foreach ($arr as $table => $columns) {
+            $nomeRouter = $this->Router->classToCamelcase($table);
+            $this->Router->setRouterGroup(
+                $nomeRouter   
+            );
 
-            $this->setTable($table);
-            $this->setFunctionPk();
-            $this->setFillable($columns);
+            $router = $this->createFile(
+                base_path('routes/base/'. $nomeRouter .'.php'),
+                $this->Router->getRouterGroup()
+            );
+
+            array_push($arrRouters, $router);
+
+            $this->Model->setTable($table);
+            $this->Model->setFunctionPk();
+            $this->Model->setFillable($columns);
 
             foreach ($columns as  $column) {
 
@@ -41,12 +64,12 @@ class CreateModels extends Model
 
                 foreach ($modelPrimaryKey as  $value) {
 
-                    if ($value['CONSTRAINT_NAME'] == 'PRIMARY') $this->setPrimaryKey($value['CONSTRAINT_NAME']);
+                    if ($value['CONSTRAINT_NAME'] == 'PRIMARY') $this->Model->setPrimaryKey($value['CONSTRAINT_NAME']);
 
                     $fk = strpos($value['CONSTRAINT_NAME'], 'fk');
                     if ($fk !== false) {
 
-                        $this->setBelongsTo(
+                        $this->Model->setBelongsTo(
                             $value['REFERENCED_TABLE_NAME'],
                             'App\Model\Tabels',
                             $value['COLUMN_NAME'],
@@ -62,7 +85,7 @@ class CreateModels extends Model
                     ->toArray();
 
                 foreach ($modelForenKey as  $value) {
-                    $this->setHasMany(
+                    $this->Model->setHasMany(
                         $value['TABLE_NAME'],
                         "App\Models\Tables",
                         $value['COLUMN_NAME'],
@@ -70,18 +93,19 @@ class CreateModels extends Model
                     );
                 }
             }
-            // dd($this->getClass('App/Model/Tables/', $table));
-            $response = $this->createFileModel(
-                base_path("app/Model/Tables/{$this->classToCamelcase($table)}.php"),
-                $this->getClass('App\Model\Tables', $table)
+           
+            
+            $response = $this->createFile(
+                base_path($filePath) . $this->Model->classToCamelcase($table).".php", // filename
+                $this->Model->getClass($nameSpaceModel, $table)        // namespace
             );
 
             array_push($arrModels, $response);
 
-            $this->destroy();
+            $this->Model->destroy();
         }
 
-        return $arrModels;
+        return [$arrModels, $arrRouters];
     }
 
     private function groupColumn($arr = [])
@@ -97,15 +121,5 @@ class CreateModels extends Model
     }
 
 
-    private function createFileModel($filename, $data)
-    {
-        if (file_exists($filename)) throw new Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}, o arquivo já existe");
-        $arquivo = fopen($filename, 'w');
-        if (!$arquivo) throw new Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}");
-        fwrite($arquivo, $data);
-        //Fechamos o arquivo após escrever nele
-        fclose($arquivo);
 
-        return $filename;
-    }
 }

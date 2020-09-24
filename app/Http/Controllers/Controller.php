@@ -27,13 +27,13 @@ abstract class Controller extends BaseController
     }
 
     public function create($request = []){
-        return $this->class::create($request);
+        return  response()->json($this->class::create($request),201);
     }
 
     public function update($id, $request = []){
          $model = $this->show($id)
           ->update($request);
 
-          return $model;
+          return response()->json($model,201);
     }
 }

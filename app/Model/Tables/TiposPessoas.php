@@ -1,31 +1,27 @@
 <?php
-        namespace App\Model\Tables;
 
-        use Illuminate\Database\Eloquent\Model;
+namespace App\Model\Tables;
 
-        class TiposPessoas extends Model 
-        {
+use Illuminate\Database\Eloquent\Model;
 
-            protected $table = "tipos_pessoas";
-    
-            protected $fillabe = ["id","descricao"];
-    
-            protected $primaryKey = "primary";
+class TiposPessoas extends Model
+{
 
-            public function setPrimaryKey()
-            { 
-                return $this->primaryKey;
-            }
-    
-            public function pessoas()
-            {
-                return $this->hasMany("App\Models\Tables", "tipo_pessoa_id","id");
-            }
-                          
-        
-    
-            
-                   
-        }
-        
-        
+    protected $table = "tipos_pessoas";
+
+    protected $fillabe = ["id", "descricao"];
+
+    protected $primaryKey = "primary";
+
+
+
+    public function setPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    public function pessoas()
+    {
+        return $this->hasMany("App\Models\Tables", "tipo_pessoa_id", "id");
+    }
+}

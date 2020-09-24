@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Construct;
+namespace App\Construct\Files;
 
 class Utils 
 {
