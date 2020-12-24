@@ -10,7 +10,7 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-$router->group(['prefix' => 'pessoa'], function () use ($router) {
+$router->group(['prefix' => 'pessoas'], function () use ($router) {
     $router->get('/{id}',   'PessoaController@show');
-    $router->get('/',       'PessoaController@showAll');
+    $router->get('/',       'PessoaController@index');
 });

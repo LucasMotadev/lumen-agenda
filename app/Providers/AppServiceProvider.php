@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Carbon\Laravel\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

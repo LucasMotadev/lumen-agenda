@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App;
 
 
 use Illuminate\Auth\Authenticatable;
@@ -19,7 +19,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'name', 'email','apelido'
     ];
     protected $hidden = [
-        'password', 'remember_token'
+        'password', 'token'
     ];
     
     // Rest omitted for brevity

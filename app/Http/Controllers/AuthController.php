@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Model\User;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
     /**
      * Create a new AuthController instance.
@@ -18,7 +17,8 @@ class AuthController extends Controller
     private $user;
     public function __construct()
     {
-         $this->middleware('auth:api', ['except' => ['login','store','solicitResetPassword']]);
+
+        $this->middleware('auth:api', ['except' => ['login','store','solicitResetPassword']]);
     }
 
     /**
@@ -28,14 +28,21 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        
-        $credentials = ['email'=> $request->email, 'password'=> $request->password];
-         
-        if (!$token = Auth::attempt($credentials, true)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        try {
+            $credentials = ['email'=> $request->email, 'password'=> $request->password];
+             
+            if (!$token = Auth::attempt($credentials, true)) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+            $user = User::find(Auth::user()->id);
+            $user->token = $token;
+            $user->save();
+    
+            return $this->respondWithToken($token);
+            
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Erro ao efetuar login'], 400);
         }
-        
-        return $this->respondWithToken($token);
     }
 
     /**
@@ -55,7 +62,6 @@ class AuthController extends Controller
      */
     public function logout()
     {   
-
         Auth::logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
