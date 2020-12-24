@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Policies\Policy\IPolicy;
+use App\Validate\IValidate;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 
@@ -11,10 +13,11 @@ abstract class  BaseController  extends  Controller
     public $model;
     public $request;
 
-    public function __construct(Request $request, $model)
+    public function __construct(Request $request, $model, IValidate $validate = null, array $policy = null )
     {
         $this->request = $request;
         $this->model =  $model;
+        $this->policy = $policy;
     }
 
     public function show($id)
@@ -30,7 +33,8 @@ abstract class  BaseController  extends  Controller
     }
 
     public function index()
-    {
+    {   
+        $this->checkPolicy('index');
         return response()->json($this->model::all(), 200);
     }
 
@@ -53,5 +57,19 @@ abstract class  BaseController  extends  Controller
         } catch (\Exception $e) {
             return  response()->json(['error' => 'Erro ao atualizar dados'], 400);
         }
+    }
+
+    public function checkPolicy($method){
+
+        if(is_array($this->policy[$method])){
+            foreach ($this->policy[$method]  as $policy) {
+                $policy->check($this->request);
+            }
+
+            return;
+        }
+
+        $this->policy[$method]->check($this->request);
+
     }
 }

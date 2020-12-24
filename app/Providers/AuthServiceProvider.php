@@ -3,13 +3,14 @@
 namespace App\Providers;
 
 use App\User;
-use Carbon\Laravel\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
+use Laravel\Lumen\Auth\Authorizable;
+use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
-class AuthServiceProvider extends ServiceProvider
+class AuthServiceProvider extends LumenServiceProvider
 {
+    use Authorizable, Authorizable;
     /**
      * Register any application services.
      *
@@ -28,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         // Here you may define how you wish users to be authenticated for your Lumen
         // application. The callback which receives the incoming request instance
         // should return either a User instance or null. You're free to obtain
