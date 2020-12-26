@@ -3,9 +3,9 @@
 namespace App\Model;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 
-class Pessoa extends Model
+
+class Pessoa extends BaseModel
 {
 
     protected $fillable = [
@@ -13,8 +13,5 @@ class Pessoa extends Model
     ];
     protected $primaryKey = 'id';
 
-    public function getPrimaryKey(){
-        return $this->primaryKey;
-    }
 
 }
