@@ -17,7 +17,11 @@ Class BaseValidate  {
         return [
             'required' => 'O campo :attribute é obrigatório.',
             'unique'   => 'O campo :attribute já existe',
-            'regex' => 'O :attribute não é valido'
+            'regex' => 'O campo :attribute não é valido',
+            'in' => 'O campo :attribute é invalido',
+            'min' => 'O campo :attribute de ter no minimo :min caracteres',
+            'max' => 'O campo :attribute de ter no minimo :max caracteres'
+
         ];
     }
 
