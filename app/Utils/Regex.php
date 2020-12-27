@@ -44,6 +44,27 @@ class Regex
         return $this;
     }
 
+    public function date($position = null)
+    {
+        $patterDate = [
+            'pt' => '^\d{2}(-|\/)\d{2}(-|\/)\d{4}',
+            'en' => '^\d{4}(-|\/)\d{2}(-|\/)\d{2}'
+        ];
+        $this->regex .= $this->onePositonOrAll($position, $patterDate);
+        return $this;
+    }
+
+    public function dateTime($position = null)
+    {
+        $patterDateTime = [
+            '^\d{2}(-|\/)\d{2}(-|\/)\d{4}\s\d{2}:\d{2}:\d{2}',
+            '^\d{4}(-|\/)\d{2}(-|\/)\d{2}\s\d{2}:\d{2}:\d{2}'
+        ];
+        $this->regex .= $this->onePositonOrAll($position, $patterDateTime);
+        return $this;
+    }
+
+
     public function onePositonOrAll($position = null, array $arrRegex)
     {
 
@@ -55,6 +76,5 @@ class Regex
         }
 
         return  implode('|', $arrRegex) . '|';
-         
     }
 }
