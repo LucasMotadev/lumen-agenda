@@ -111,7 +111,7 @@ abstract class  BaseController  extends  Controller
 
             // policiticas 
             if(!empty($this->policy)){
-                if(!($this->policy->update(Auth::user(), $recuso))){
+                if(!($this->policy->authorize('updates', $recuso))){
                     return response()->json(['error' => 'Usuario não autorizado' ], 403);
                 }
             }

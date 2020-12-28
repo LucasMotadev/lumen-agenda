@@ -27,7 +27,7 @@ Class BaseValidate  {
 
     protected function regexEmail(){
 
-        return 'regex:' . $this->regex->email('.com.br')->get('im');
+        return 'regex:' . $this->regex->email('defalt')->get('im');
 
     }
 

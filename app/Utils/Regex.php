@@ -44,6 +44,11 @@ class Regex
         return $this;
     }
 
+    public function cnpj(){
+        $this->regex  .= '\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|';
+        return $this;
+    }
+
     public function date($position = null)
     {
         $patterDate = [

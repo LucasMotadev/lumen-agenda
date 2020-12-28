@@ -2,13 +2,18 @@
 
 namespace App\Policies;
 
+use Illuminate\Database\Eloquent\Model;
 
-
-class PessoaPolicy implements IPolicy
+class PessoaPolicy extends BasePolicy implements IPolicy
 {
-    public function update($user, $pessoa):bool
+    public function __construct()
+    {   
+        parent::__construct(PessoaPolicy::class);
+    }
+
+    public function update(Model $pessoa):bool
     {
-        return $user->id == $pessoa->id;
+        return $this->auth->id == $pessoa->id;
         
     }
 
