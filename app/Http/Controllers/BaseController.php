@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Policies\Policy\IPolicy;
+use App\Policies\IPolicy;
 use App\Utils\Regex;
 use App\Validate\IValidate;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Routing\Controller;
 
@@ -17,7 +18,7 @@ abstract class  BaseController  extends  Controller
     public $model;
     public $request;
 
-    public function __construct(Request $request, $model, IValidate $validate = null, array $policy = null)
+    public function __construct(Request $request, $model, IValidate $validate = null, IPolicy $policy = null)
     {
 
         $this->request = $request;
@@ -42,7 +43,7 @@ abstract class  BaseController  extends  Controller
     {
         try {
             $arrQueryString = $this->request->all();
-            $response = $this->model::select('*');
+            $recurso = $this->model::select('*');
 
             // retorna apenas colunas informadas.
             if (
@@ -50,18 +51,18 @@ abstract class  BaseController  extends  Controller
                 !empty($arrQueryString['column']) &&
                 is_array($arrQueryString['column'])
             ) {
-                $response->select($arrQueryString['column']);
+                $recurso->select($arrQueryString['column']);
             }
             // fim retorna apenas colunas informadas.
 
             // queryString to eloquent
             if (!empty($arrQueryString)) {
 
-                $response =  $this->queryStringToElequente($arrQueryString, $response);
+                $recurso =  $this->queryStringToElequente($arrQueryString, $recurso);
             }
 
 
-            return response()->json($response->paginate(), 200);
+            return response()->json($recurso->paginate(), 200);
         } catch (\Exception $e) {
             return $this->responseError($e, 'Erro ao consultar dados');
         }
@@ -90,17 +91,31 @@ abstract class  BaseController  extends  Controller
     public function update($id)
     {
         try {
-
-            //validação
+            
+            
+            //validação formulario
             if (!empty($this->validate)) {
                 $rules = $this->validate->getUpdateRules($id);
                 $messagens = $this->validate->messagens();
                 $validate = Validator::make($this->request->all(), $rules, $messagens);
                 if ($validate->fails()) return $validate->errors();
             }
-            // fim validação
-
+            // fim validação formulario
+            
             $recuso = $this->model::find($id);
+
+            if(empty($recuso)){
+                return response()->json(['error' => 'Recurso nao encontrado' ], 401);
+            }
+
+
+            // policiticas 
+            if(!empty($this->policy)){
+                if(!($this->policy->update(Auth::user(), $recuso))){
+                    return response()->json(['error' => 'Usuario não autorizado' ], 403);
+                }
+            }
+            
             $response = $recuso->update($this->request->all());
 
             return response()->json($response, 204);

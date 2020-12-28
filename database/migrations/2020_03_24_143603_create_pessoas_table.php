@@ -16,7 +16,6 @@ class CreatePessoasTable extends Migration
         Schema::create('pessoas', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('codigo')->unique();
             $table->integer('tipo_pessoa_id');
             $table->timestamps();
         });
