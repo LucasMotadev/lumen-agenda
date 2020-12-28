@@ -13,7 +13,6 @@ class PessoaController extends BaseController
 
     public function __construct(Request $request)
     {
-        parent::__construct($request, new Pessoa(),new PessoaValidate(), new PessoaPolicy);
+        parent::__construct($request, new Pessoa(), new PessoaValidate(), new PessoaPolicy);
     }
-
 }
