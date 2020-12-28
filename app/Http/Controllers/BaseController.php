@@ -91,8 +91,8 @@ abstract class  BaseController  extends  Controller
     public function update($id)
     {
         try {
-            
-            
+
+
             //validação formulario
             if (!empty($this->validate)) {
                 $rules = $this->validate->getUpdateRules($id);
@@ -100,42 +100,28 @@ abstract class  BaseController  extends  Controller
                 $validate = Validator::make($this->request->all(), $rules, $messagens);
                 if ($validate->fails()) return $validate->errors();
             }
+
             // fim validação formulario
-            
             $recuso = $this->model::find($id);
 
-            if(empty($recuso)){
-                return response()->json(['error' => 'Recurso nao encontrado' ], 401);
+            if (empty($recuso)) {
+                return response()->json(['error' => 'Recurso nao encontrado'], 401);
             }
 
 
             // policiticas 
-            if(!empty($this->policy)){
-                if(!($this->policy->authorize('updates', $recuso))){
-                    return response()->json(['error' => 'Usuario não autorizado' ], 403);
+            if (!empty($this->policy)) {
+                if (!($this->policy->authorize('update', $recuso))) {
+                    return response()->json(['error' => 'Usuario não autorizado'], 403);
                 }
             }
-            
+
             $response = $recuso->update($this->request->all());
 
             return response()->json($response, 204);
         } catch (\Exception $e) {
             return $this->responseError($e, 'Erro ao alterar dados');
         }
-    }
-
-    public function checkPolicy($method)
-    {
-
-        if (is_array($this->policy[$method])) {
-            foreach ($this->policy[$method]  as $policy) {
-                $policy->check($this->request);
-            }
-
-            return;
-        }
-
-        $this->policy[$method]->check($this->request);
     }
 
     public function responseError(Exception $e, string $message)
