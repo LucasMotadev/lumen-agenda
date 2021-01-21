@@ -14,11 +14,7 @@ class UserController extends BaseController
 
     public function __construct(Request $request)
     {
-        $policy = [
-            'index' => new UserPolicy()
-        ];
-
-        parent::__construct($request, new User(), new UserValidate(), $policy);
+        parent::__construct($request, new User(), new UserValidate());
     }
 
 }

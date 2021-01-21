@@ -44,7 +44,7 @@ class CreateModels  extends BaseCreate
             );
 
             $router = $this->createFile(
-                base_path('routes/base/'. $nomeRouter .'.php'),
+                base_path('routes/api/'. lcfirst($nomeRouter) .'.php'),
                 $this->Router->getRouterGroup()
             );
 

@@ -10,13 +10,13 @@ class Router extends Utils {
     public function setRouterGroup($prefix){
 
        $this->routerGroup =  '<?php 
-       $router->group(["prefix" => "'.$prefix.'"], function () use ($router) {
+       $router->group(["prefix" => "'.$prefix.'", "middleware" => "auth"], function () use ($router) {
 
-            $router->get("/{id}",           "'.$prefix.'Controller@show");
-            $router->get("/" ,              "'.$prefix.'Controller@showAll");
-            $router->post("/",              "'.$prefix.'Controller@create");
-            $router->put("/",               "'.$prefix.'Controller@update");
-            $router->delete("/{id}",        "'.$prefix.'Controller@update");
+            $router->get("/{id}",           ["uses" => "'.$prefix.'Controller@show"]);
+            $router->get("/" ,              ["uses" => "'.$prefix.'Controller@index"]);
+            $router->post("/",              ["uses" => "'.$prefix.'Controller@store"]);
+            $router->put("/",               ["uses" => "'.$prefix.'Controller@update"]);
+            $router->delete("/{id}",        ["uses" => "'.$prefix.'Controller@destroy"]);
         
         });';
     }

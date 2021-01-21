@@ -12,8 +12,6 @@ class Model extends Utils
     private $belongsTo = '';
     private $functionPk;
 
-
-
     public function setTable(string $table)
     {
         $this->table = 'protected $table = "' .  strtolower($table) . '";';
