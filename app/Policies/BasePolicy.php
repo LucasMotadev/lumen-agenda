@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
-class BasePolicy {
+class BasePolicy
+{
 
     protected $auth;
     protected $classPolicy;
@@ -15,15 +17,15 @@ class BasePolicy {
         $this->classPolicy = $classPolicy;
     }
 
-    public function authorize(string $method, $recurso){
-        if(method_exists($this->classPolicy, $method)){
+    public function authorize(string $method, $recurso)
+    {
+        if (method_exists($this->classPolicy, $method)) {
             $stringClass = $this->classPolicy;
             $class = new $stringClass();
 
-             return $class->$method($recurso);
+            return $class->$method($recurso);
         }
 
-        return false;
-
+        throw new Exception('Method de validação não existe');
     }
 }
