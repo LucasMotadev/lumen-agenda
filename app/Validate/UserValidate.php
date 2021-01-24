@@ -9,9 +9,8 @@ class UserValidate extends BaseValidate implements IValidate
     public function getCreateRules(): array
     {
         
-
         return [
-            'email' => 'required|unique:users|' . $this->regexEmail(),
+            'email' => 'required|unique:users,email',
             'apelido' => 'required',
             'password' =>   'required'
         ];

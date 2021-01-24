@@ -20,7 +20,7 @@ Class BaseValidate  {
             'regex' => 'O campo :attribute não é valido',
             'in' => 'O campo :attribute é invalido',
             'min' => 'O campo :attribute de ter no minimo :min caracteres',
-            'max' => 'O campo :attribute de ter no minimo :max caracteres'
+            'max' => 'O campo :attribute de ter no maximo :max caracteres'
 
         ];
     }

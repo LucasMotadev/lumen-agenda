@@ -2,7 +2,7 @@
 
 namespace App\Construct\Files;
 
-class Router extends Utils {
+class RouterFile extends BaseFile {
 
     private $routerGroup = '';
 

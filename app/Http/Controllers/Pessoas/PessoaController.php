@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Pessoas;
 
 use App\Http\Controllers\BaseController;
 use App\Model\Pessoa;

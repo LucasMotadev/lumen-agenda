@@ -10,7 +10,7 @@ class Pessoa extends BaseModel
 {
 
     protected $fillable = [
-        'id', 'codigo', 'tipo_pessoa_id', "nome", 'created_at', 'updated_at'
+        'tipo_pessoa_id','codigo', 'created_at', 'updated_at'
     ];
     protected $primaryKey = 'id';
 

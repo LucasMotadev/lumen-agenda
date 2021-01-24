@@ -10,15 +10,16 @@ class PessoaValidate extends BaseValidate implements IValidate
     {
     
         return [
-            'nome' => 'required',
-            'codigo' => 'required|min:11|max:14|unique:pessoas',
+            'tipo_pessoa_id' => 'required|exists:tipos_pessoas,id',
+            'codigo' => 'required|unique:pessoas,codigo|min:11|max:14'
         ];
     }
 
     public function getUpdateRules($id): array
     {
         return [
-            'codigo' => 'min:11|max:14|unique:pessoas',
+            'tipo_pessoa_id' => 'required|exists:tipos_pessoas:id',
+            'codigo' => 'required|unique:pessoas,codigo|min:11|max:14'
         ];
     }
 }

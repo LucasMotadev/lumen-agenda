@@ -1,5 +1,5 @@
 <?php
-namespace App\Construct\Controller;
+namespace App\Construct\Created;
 
 use Exception;
 
