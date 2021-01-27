@@ -39,34 +39,26 @@ class CreateModels  extends BaseCreate
         }
     }
 
-    public function createdModelValidate($table, $path)
+    public function createdModelValidate($path, $table = false)
     {
-        try {
 
-            $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'))
-                ->where('table_name', $table)
-                ->orderBy('table_name')
-                ->get()
-                ->toArray();
-
-            if (empty($model)) return response()->json(['error' => "A tabela '$table' não existe!"], 422);
-
-            $tables = $this->groupColumnValidate($model);
-            $validate = $this->setValidateKeys($tables);
-
-            $modelFile = new ModelFile();
-            $modelFile->setClass($validate, $path);
-            return response()->json($validate);
-
-        } catch (\Exception $e) {
-            return response()->json(
-                [
-                    'error' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine()
-                ]
-            );
+        $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'));
+        
+        if($table){
+            $model->where('table_name', $table);
         }
+
+        $tables =  $model->orderBy('table_name')
+            ->get()
+            ->toArray();
+
+      
+        $tablesInitValidate = $this->groupColumnValidate($tables);
+        $validateAll = $this->setValidateKeys($tablesInitValidate);
+
+        $modelFile = new ModelFile();
+        $modelFile->setClass($validateAll, $path);
+        return $validateAll;
     }
 
 
@@ -125,9 +117,9 @@ class CreateModels  extends BaseCreate
                     array_push(
                         $tables[$table]['belongsTo'],
                         [
-                           'table'=> $value['TABLE_NAME'],
-                           'local_key' =>$value['COLUMN_NAME'],
-                           'foreign_key' => $column
+                            'table' => $value['TABLE_NAME'],
+                            'local_key' => $value['COLUMN_NAME'],
+                            'foreign_key' => $column
                         ]
                     );
                 }
@@ -145,25 +137,28 @@ class CreateModels  extends BaseCreate
 
 
         foreach ($arr as $value) {
+
+            $table[$value['TABLE_NAME']]['hasMany'] = [];
+            $table[$value['TABLE_NAME']]['belongsTo'] = [];
+            $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] = '';
+
+    
             if (empty($table[$value['TABLE_NAME']]['fillable'])) {
                 $table[$value['TABLE_NAME']]['fillable'] = [];
             }
             array_push($table[$value['TABLE_NAME']]['fillable'], $value['COLUMN_NAME']);
 
-           
+
             if ($value['COLUMN_KEY'] == 'PRI') { #auto incremet é primaria, 
                 $table[$value['TABLE_NAME']]['primaryKey'] = $value['COLUMN_NAME'];
                 continue;
             }
 
-            if(!isset($table[$value['TABLE_NAME']]['primaryKey'])) $table[$value['TABLE_NAME']]['primaryKey'] = '';
+            if (!isset($table[$value['TABLE_NAME']]['primaryKey'])) $table[$value['TABLE_NAME']]['primaryKey'] = '';
 
-            
 
-            $table[$value['TABLE_NAME']]['hasMany'] = [];
-            $table[$value['TABLE_NAME']]['belongsTo'] = [];
 
-            $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] = '';
+
 
 
             $method = $value['DATA_TYPE'];

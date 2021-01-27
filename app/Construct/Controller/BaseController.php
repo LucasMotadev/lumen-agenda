@@ -40,7 +40,7 @@ abstract class  BaseController  extends  Controller
     {
         try {
             $arrQueryString = $this->request->all();
-            $recurso = $this->model::select('*');
+            $recurso = $this->model::select('*')->where('table_schema', env('DB_DATABASE_MYSQL'));
 
             // retorna apenas colunas informadas.
             if (

@@ -17,11 +17,11 @@ class Empresas extends Model
 
     public function pessoasJuridicas()
     {
-        return $this->hasMany("pessoasJuridicas::class", "id", "pessoa_juridica_id");
+        return $this->hasMany(PessoasJuridicas::class, "id", "pessoa_juridica_id");
     }
 
     public function bandeira()
     {
-        return $this->hasMany("bandeira::class", "id", "bandeira_id");
+        return $this->hasMany(Bandeira::class, "id", "bandeira_id");
     }
 }

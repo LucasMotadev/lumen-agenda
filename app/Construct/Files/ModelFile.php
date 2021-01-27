@@ -40,7 +40,7 @@ class ModelFile extends BaseFile implements IFile
 
             $this->hasMany .= 'public function ' . $this->methodToCamelcase($value['table'])  . '()
             {
-                return $this->hasMany("' . $this->methodToCamelcase($value['table']) . '::class", "' . strtolower($value['local_key']) . '","' . strtolower($value['foreign_key']) . '");
+                return $this->hasMany(' . $this->classToCamelcase($value['table']) . '::class, "' . strtolower($value['local_key']) . '","' . strtolower($value['foreign_key']) . '");
             }
                           
         ';
@@ -54,7 +54,7 @@ class ModelFile extends BaseFile implements IFile
 
             $this->hasMany .= 'public function ' . $this->methodToCamelcase($value['table'])  . '()
             {
-                return $this->belongsTo("' . $this->methodToCamelcase($value['table']) . '::class", "' . strtolower($value['local_key']) . '","' . strtolower($value['foreign_key']) . '");
+                return $this->belongsTo(' . $this->classToCamelcase($value['table']) . '::class, "' . strtolower($value['local_key']) . '","' . strtolower($value['foreign_key']) . '");
             }
                           
         ';
