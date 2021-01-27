@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Policies\User\UserPolicy;
 use App\User;
 use App\Validate\UserValidate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends BaseController
 {
@@ -16,5 +14,4 @@ class UserController extends BaseController
     {
         parent::__construct($request, new User(), new UserValidate());
     }
-
 }

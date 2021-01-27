@@ -1,0 +1,16 @@
+<?php
+
+namespace {{namespace}};
+
+use App\Http\Controllers\BaseController;
+use {{useModel}};
+use {{useValidate}};
+use Illuminate\Http\Request;
+
+class {{classNameController}} extends BaseController
+{
+    public function __construct(Request $request)
+    {
+        parent::__construct($request, new {{objectModel}}(), new {{objectValidate}}());
+    }
+}

@@ -2,7 +2,7 @@
 
 namespace App\Construct\Created;
 
-use App\Construct\Files\Controller;
+use App\Construct\Files\ControllerFile;
 use App\Construct\Model\Columns;
 use App\Construct\Model\keys;
 
@@ -14,37 +14,11 @@ use Illuminate\Http\Request;
 
 class CreateModels  extends BaseCreate
 {
-
-    public function index()
+    public function getModelValidate($table)
     {
-        try {
-            $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'))
-                // ->where('table_name', 'empresas')
-                ->orderBy('table_name')
-                ->get()
-                ->toArray();
-
-            $validateType = $this->groupColumnValidate($model); #agrupa colunas e inicia validação validando apenas por tipo
-            $validateAll = $this->setValidateKeys($validateType); #concatena a validação por  key  a tipo.
-
-            return response()->json($validateAll);
-        } catch (\Exception $e) {
-            return response()->json(
-                [
-                    'error' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine()
-                ]
-            );
-        }
-    }
-
-    public function createdModelValidate($path, $table = false)
-    {
-
         $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'));
-        
-        if($table){
+
+        if ($table) {
             $model->where('table_name', $table);
         }
 
@@ -52,12 +26,33 @@ class CreateModels  extends BaseCreate
             ->get()
             ->toArray();
 
-      
+        $tablesInitValidate = $this->groupColumnValidate($tables);
+        $validateAll = $this->setValidateKeys($tablesInitValidate);
+        return $validateAll;
+    }
+
+    public function createdModelValidate(Request $request)
+    {
+
+        $model = Columns::where('table_schema', env('DB_DATABASE_MYSQL'));
+
+        if ($request->table) {
+            $model->where('table_name', $request->table);
+        }
+
+        $tables =  $model->orderBy('table_name')
+            ->get()
+            ->toArray();
+
         $tablesInitValidate = $this->groupColumnValidate($tables);
         $validateAll = $this->setValidateKeys($tablesInitValidate);
 
         $modelFile = new ModelFile();
-        $modelFile->setClass($validateAll, $path);
+        $modelFile->createClass($validateAll, $request->pathModel);
+
+        $controllerFile = new ControllerFile();
+        $controllerFile->createClass($validateAll, $request->pathController, $request->pathModel, $request->pathValidate);
+
         return $validateAll;
     }
 
@@ -79,13 +74,13 @@ class CreateModels  extends BaseCreate
                 foreach ($keys as  $value) {
                     #verifica de a cheve e primaria, se sim: adiciona validate 
                     if ($value['CONSTRAINT_NAME'] == 'PRIMARY') {
-                        $tables[$table]['validate'][$column] .= "|unique:$table,$column";
+                        $tables[$table]['validate'][$column] .= "unique:$table,$column|";
                     }
 
                     #verifica se a chave é unica, se sim adiciona validate
                     $fk = strpos($value['CONSTRAINT_NAME'], 'UNIQUE');
                     if ($fk !== false) {
-                        $tables[$table]['validate'][$column] .= "|unique:$table,$column";
+                        $tables[$table]['validate'][$column] .= "unique:$table,$column|";
                     }
 
                     #verifica se a cheve é extrangeira, se sim adiciona validate
@@ -100,10 +95,10 @@ class CreateModels  extends BaseCreate
                                 'foreign_key'   =>  $column
                             ]
                         );
-                        $tables[$table]['validate'][$column] .= "|exists:{$value['REFERENCED_TABLE_NAME']},{$value['REFERENCED_COLUMN_NAME']}";
+                        $tables[$table]['validate'][$column] .= "exists:{$value['REFERENCED_TABLE_NAME']},{$value['REFERENCED_COLUMN_NAME']}|";
                     }
 
-                    // $tables[$table]['validate'][$column] = substr($tables[$table]['validate'][$column], 0, -1);
+                    $tables[$table]['validate'][$column] = substr($tables[$table]['validate'][$column], 0, -1);
                 }
 
                 #verificar se o rercuso faz referecia para outro
@@ -142,7 +137,7 @@ class CreateModels  extends BaseCreate
             $table[$value['TABLE_NAME']]['belongsTo'] = [];
             $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] = '';
 
-    
+
             if (empty($table[$value['TABLE_NAME']]['fillable'])) {
                 $table[$value['TABLE_NAME']]['fillable'] = [];
             }
@@ -166,7 +161,7 @@ class CreateModels  extends BaseCreate
             $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] = $this->contextMethod($method, $length);
 
             if ($value['IS_NULLABLE'] == 'NO') {
-                $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] .= "|required";
+                $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] .= "required|";
             }
         }
 

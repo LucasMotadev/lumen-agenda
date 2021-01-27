@@ -1,0 +1,21 @@
+<?php
+
+namespace {{namespace}};
+
+use App\Model\BaseModel;
+
+class {{classNameModel}} extends BaseModel
+{
+
+    protected $table = "{{table}}";
+
+    protected $fillabe = [{{fillabe}}];
+
+    protected $primaryKey = "{{primaryKey}}";
+
+
+    {{hasMany}}
+
+    {{belongsTo}}
+}
+

@@ -1,0 +1,4 @@
+    public function {{nameMethod}}()
+    {
+        return $this->belongsTo({{nameClassFk}}::class, '{{localkey}}', '{{foreignKey}}');
+    }

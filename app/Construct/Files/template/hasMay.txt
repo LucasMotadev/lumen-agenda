@@ -1,0 +1,4 @@
+    public function {{nameMethod}}()
+    {
+        return $this->hasMany({{nameClassFk}}::class, '{{localkey}}', '{{foreignKey}}');
+    }
