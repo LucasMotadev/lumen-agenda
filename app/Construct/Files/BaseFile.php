@@ -2,7 +2,7 @@
 
 namespace App\Construct\Files;
 
-class BaseFile 
+abstract class BaseFile 
 {
 
     public function methodToCamelcase($name)
@@ -40,6 +40,7 @@ class BaseFile
         return ucfirst(str_replace('/','\\',$path));
     }
 
+
     public function createFile(string $filename, string $class)
     {
         if (file_exists($filename)) throw new \Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}, o arquivo já existe");
@@ -51,4 +52,16 @@ class BaseFile
 
         return $filename;
     } 
+
+    public function create()
+    {
+        foreach ($this->arrStringClass as $filename => $stringClass) {
+            $this->createFile($filename, $stringClass);
+        }
+    }
+
+    public function get()
+    {
+        return $this->arrStringClass;
+    }
 }

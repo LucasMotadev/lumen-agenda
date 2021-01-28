@@ -2,7 +2,7 @@
 
 namespace App\Construct\Files;
 
-
+use App\Construct\Orm\ImodelValidate;
 use Illuminate\Http\Client\Request;
 
 class ControllerFile extends BaseFile
@@ -14,49 +14,40 @@ class ControllerFile extends BaseFile
     private  $useModel;
     private  $objectValidate;
     private  $useValidate;
+    protected $filename;  
+    protected  $arrStringClass = [];
 
-
-
-    public function setNamespace($name): void
+    public function __construct($tables, string $relativePath, string $namespaceModel, $nameSpaceValidate = null)
     {
-        $this->namespace = $name;
+        $this->tables = $tables;
+        $this->relativePath = $relativePath;
+        $this->namespaceModel = $namespaceModel;
+        $this->nameSpaceValidate =  $nameSpaceValidate;
     }
-
-    public function setModel($model): void
+    public function writeClass()
     {
-        $this->model = $model;
-    }
+        $tables = explode(',', $this->tables);
 
-    public function setValidate($validate): void
-    {
-        $this->validate = $validate;
-    }
-
-    public function createClass(array $modelFile, string $pathController, $pathModel, $pathValidate)
-    {
-        foreach ($modelFile as $table => $value) {
+        foreach ($tables as $table) {
             $this->classNameController = $this->classToCamelcase($table) . "Controller";
 
-            $this->filename = base_path($pathController) . "/{$this->classNameController}.php";
-            $this->namespace    =  $this->filePathToNamesape($pathController);
-            $this->objectModel = $this->classToCamelcase($table);
-            $this->useModel     =  $this->filePathToNamesape($pathModel . '/')  . "{$this->objectModel}";
-            $this->objectValidate = $this->classToCamelcase($table) . "Validate";
-            $this->useValidate  =   $this->filePathToNamesape($pathValidate . '/') . "{$this->objectValidate}";
-            $this->createFile($this->filename, $this->getClass());
+            $this->filename         = base_path($this->relativePath) . "/{$this->classNameController}.php";
+            $this->namespace        = $this->filePathToNamesape($this->relativePath);
+            $this->objectModel      = $this->classToCamelcase($table);
+            $this->useModel         = $this->filePathToNamesape($this->namespaceModel . '/')  . "{$this->objectModel}";
+            $this->objectValidate   = $this->classToCamelcase($table) . "Validate";
+            $this->useValidate      = $this->filePathToNamesape($this->nameSpaceValidate . '/') . "{$this->objectValidate}";
+            array_push($this->arrStringClass, ['class' => $this->buildTemplate(), 'filename' => $this->filename]);
+            //$this->createFile($this->filename, $this->getClass());
             $this->destroy();
         }
+        return $this;
     }
 
-    public function getClass(): string
+    public function buildTemplate(): string
     {
 
-        // useModel
-        // useValidate
-        // classNameController
-        // objectModel
-        // objectValidate
-        $file = __DIR__ . '\template\Controlle.txt';
+        $file = __DIR__ . '\template\controlle.txt';
         $template = file_get_contents($file);
         $template = preg_replace('/{{namespace}}/', $this->namespace, $template);
         $template = preg_replace('/{{useModel}}/', $this->useModel, $template);
@@ -66,7 +57,6 @@ class ControllerFile extends BaseFile
         $template = preg_replace('/{{objectValidate}}/', $this->objectValidate, $template);
 
         return $template;
-    
     }
 
     private function destroy()

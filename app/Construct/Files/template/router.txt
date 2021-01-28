@@ -1,0 +1,18 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Application Routes by Lucas Mota
+|--------------------------------------------------------------------------
+|
+*/
+
+$router->group(['prefix' => '{{prefix}}'], function () use ($router) {
+
+    $router->get('/',       ['uses'=> '{{filename}}@index']);
+    $router->post('/',      ['uses'=> '{{filename}}@store']);
+    $router->put('/{id}',   ['uses'=> '{{filename}}@update']);
+    $router->get('/{id}',   ['uses'=> '{{filename}}@show']);
+    $router->delete('/{id}',['uses'=> '{{filename}}@destroy']);
+    
+});

@@ -2,6 +2,8 @@
 
 namespace App\Construct\Files;
 
+use App\Construct\Orm\ImodelValidate;
+
 class ModelFile extends BaseFile implements IFile
 {
     private  $namespace = '';
@@ -11,7 +13,15 @@ class ModelFile extends BaseFile implements IFile
     private  $primaryKey = "";
     private  $hasMany = '';
     private  $belongsTo = '';
+    
+    protected $filename; 
+    protected  $arrStringClass  = [];
 
+    public function __construct(ImodelValidate $modelValidate, string $relativePath)
+    {
+       $this->modelValidate = $modelValidate; 
+       $this->relativePath = $relativePath;
+    }
 
     public function setTable(string $table)
     {
@@ -62,26 +72,29 @@ class ModelFile extends BaseFile implements IFile
         }
     }
 
-    public function createClass(array $modelsTabels, string $pathModel)
-    {
-        foreach ($modelsTabels as $table => $value) {
-            $this->namespace = $this->filePathToNamesape($pathModel);
+    public function writeClass()
+    {       
+        foreach ($this->modelValidate->get() as $table => $value) {
+            $this->namespace = $this->filePathToNamesape($this->relativePath);
             $this->classNameModel = $this->classToCamelcase($table);
-            $this->filename = base_path($pathModel) . "/{$this->classNameModel}.php";
+            $this->filename = base_path($this->relativePath) . "/{$this->classNameModel}.php";
             $this->setTable($table);
             $this->setFillable($value['fillable']);
             $this->setPrimaryKey($value['primaryKey']);
             $this->setHasMany($value['hasMany']);
             $this->setBelongsTo($value['belongsTo']);
-
-            $this->createFile($this->filename, $this->getClass());
+            array_push($this->arrStringClass, ['class'=>$this->buildTemplate(), 'filename'=> $this->filename]);
+            // $this->createFile($this->filename, $this->getClass());
             $this->destroy();
         }
+
+        return $this;
     }
 
-    public function getClass(): string
+
+    public function buildTemplate(): string
     {
-        $file = __DIR__ . '\template\Model.txt';
+        $file = __DIR__ . '\template\model.txt';
         $template = file_get_contents($file);
         $template = preg_replace('/{{namespace}}/', $this->namespace, $template);
         $template = preg_replace('/{{classNameModel}}/', $this->classNameModel, $template);

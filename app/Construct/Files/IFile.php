@@ -3,7 +3,7 @@
 namespace App\Construct\Files;
 
 interface IFIle {
-    public function getClass():string;
-    public function createClass(array $modelFile, string $nameSpace);
+    public function buildTemplate():string;
+    public function writeClass();
     
 }
