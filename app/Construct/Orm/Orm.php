@@ -7,6 +7,7 @@ use App\Construct\Model\Columns;
 use App\Construct\Model\keys;
 
 use App\Construct\Files\ModelFile;
+use App\Construct\Files\ValidateFile;
 use App\Construct\Orm\Mysql\InitModelValidate;
 use App\Construct\Orm\Mysql\ModelValidateKeys;
 use Illuminate\Http\Request;
@@ -36,7 +37,11 @@ class Orm
     public function getClassController($relativePath, $namespaceModel, $namespaceValidate = null){
         $controllerFile = new ControllerFile($this->table, $relativePath, $namespaceModel, $namespaceValidate);
         return $controllerFile->writeClass()->get();
+    }
 
+    public function getClassValidate($relativePath){
+        $validateFile = new ValidateFile($this->modelValidate, $relativePath);
+        return $validateFile->writeClass()->get();
     }
 
     public function getModelValidate(){

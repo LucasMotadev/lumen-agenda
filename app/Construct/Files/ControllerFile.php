@@ -29,13 +29,13 @@ class ControllerFile extends BaseFile
         $tables = explode(',', $this->tables);
 
         foreach ($tables as $table) {
-            $this->classNameController = $this->classToCamelcase($table) . "Controller";
+            $this->classNameController = $this->snakeCaseToPascalCase($table) . "Controller";
 
             $this->filename         = base_path($this->relativePath) . "/{$this->classNameController}.php";
             $this->namespace        = $this->filePathToNamesape($this->relativePath);
-            $this->objectModel      = $this->classToCamelcase($table);
+            $this->objectModel      = $this->snakeCaseToPascalCase($table);
             $this->useModel         = $this->filePathToNamesape($this->namespaceModel . '/')  . "{$this->objectModel}";
-            $this->objectValidate   = $this->classToCamelcase($table) . "Validate";
+            $this->objectValidate   = $this->snakeCaseToPascalCase($table) . "Validate";
             $this->useValidate      = $this->filePathToNamesape($this->nameSpaceValidate . '/') . "{$this->objectValidate}";
             array_push($this->arrStringClass, ['class' => $this->buildTemplate(), 'filename' => $this->filename]);
             //$this->createFile($this->filename, $this->getClass());

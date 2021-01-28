@@ -46,8 +46,8 @@ class ModelFile extends BaseFile implements IFile
             $file =  $file = __DIR__ . '\template\hasMay.txt';
 
             $template = file_get_contents($file);
-            $template = preg_replace('/{{nameMethod}}/', $this->methodToCamelcase($value['table']), $template);
-            $template = preg_replace('/{{nameClassFk}}/', $this->classToCamelcase($value['table']), $template);
+            $template = preg_replace('/{{nameMethod}}/', $this->snakeCaseToCamelcase($value['table']), $template);
+            $template = preg_replace('/{{nameClassFk}}/', $this->snakeCaseToPascalCase($value['table']), $template);
             $template = preg_replace('/{{localkey}}/', strtolower($value['local_key']), $template);
             $template = preg_replace('/{{foreignKey}}/', strtolower($value['foreign_key']), $template);
 
@@ -63,8 +63,8 @@ class ModelFile extends BaseFile implements IFile
             $file =  $file = __DIR__ . '\template\belongsTo.txt';
 
             $template = file_get_contents($file);
-            $template = preg_replace('/{{nameMethod}}/', $this->methodToCamelcase($value['table']), $template);
-            $template = preg_replace('/{{nameClassFk}}/', $this->classToCamelcase($value['table']), $template);
+            $template = preg_replace('/{{nameMethod}}/', $this->snakeCaseToCamelcase($value['table']), $template);
+            $template = preg_replace('/{{nameClassFk}}/', $this->snakeCaseToPascalCase($value['table']), $template);
             $template = preg_replace('/{{localkey}}/', strtolower($value['local_key']), $template);
             $template = preg_replace('/{{foreignKey}}/', strtolower($value['foreign_key']), $template);
 
@@ -76,7 +76,7 @@ class ModelFile extends BaseFile implements IFile
     {       
         foreach ($this->modelValidate->get() as $table => $value) {
             $this->namespace = $this->filePathToNamesape($this->relativePath);
-            $this->classNameModel = $this->classToCamelcase($table);
+            $this->classNameModel = $this->snakeCaseToPascalCase($table);
             $this->filename = base_path($this->relativePath) . "/{$this->classNameModel}.php";
             $this->setTable($table);
             $this->setFillable($value['fillable']);

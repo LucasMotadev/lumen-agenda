@@ -73,7 +73,7 @@ class InitModelValidate
             $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] = $this->contextMethod($method, $length);
 
             if ($value['IS_NULLABLE'] == 'NO') {
-                $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] .= "required|";
+                $table[$value['TABLE_NAME']]['validate'][$value['COLUMN_NAME']] .= "|required|";
             }
         }
 
@@ -92,11 +92,11 @@ class InitModelValidate
     public function int($length)
     {
         $max =  empty($length) ? 11 : $length;
-        return "numeric|max:$max";
+        return "numeric|max:$max|";
     }
     public function varchar($length)
     {
-        return "string|max:$length";
+        return "string|max:$length|";
     }
 
     public function datetime($length)

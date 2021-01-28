@@ -20,7 +20,7 @@ class TableController extends BaseController
             $this->request,
             [
 
-                //'table' => 'required',
+                'table' => 'required',
                 'pathModel' => 'required',
                 'pathValidate' => 'required',
                 'pathController' => 'required'
@@ -28,15 +28,21 @@ class TableController extends BaseController
         );
 
        $orm = new Orm($this->request->table);
-       $arrModelValidateController['model'] = $orm->mysql()
+       $mysql =$orm->mysql();
+
+       $arrModelValidateController['model'] = $mysql
        ->getClassModel($this->request->pathModel);
 
-       $arrModelValidateController['controller'] = $orm->mysql()
+       $arrModelValidateController['controller'] = $mysql
        ->getClassController(
             $this->request->pathController, 
             $this->request->pathModel, 
             $this->request->pathValidate
         );
+
+        $arrModelValidateController['validate'] = $mysql
+        ->getClassValidate($this->request->pathValidate);
+        
        return response()->json($arrModelValidateController);
     }
 }

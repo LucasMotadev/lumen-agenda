@@ -4,8 +4,8 @@ namespace App\Construct\Files;
 
 abstract class BaseFile 
 {
-
-    public function methodToCamelcase($name)
+    #snake_case to camelCase
+    public function snakeCaseToCamelcase($name)
     {
 
         $arrName = explode('_', strtolower($name));
@@ -23,17 +23,9 @@ abstract class BaseFile
         return $newName;
     }
 
-    public function classToCamelcase($name)
+    public function snakeCaseToPascalCase($name)
     {
-  
-      $arrName = explode('_', strtolower($name));
-      $newName = '';
-  
-      foreach ($arrName as  $value) {
-        $newName .= ucfirst($value);
-      }
-  
-      return $newName;
+      return ucfirst($this->snakeCaseToCamelcase($name));
     }
 
     public function filePathToNamesape(string $path){
@@ -43,9 +35,9 @@ abstract class BaseFile
 
     public function createFile(string $filename, string $class)
     {
-        if (file_exists($filename)) throw new \Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}, o arquivo já existe");
+        if (file_exists($filename)) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}, o arquivo já existe");
         $arquivo = fopen($filename, 'w');
-        if (!$arquivo) throw new \Exception("Erro ao criar Class  {$this->classToCamelcase($filename)}");
+        if (!$arquivo) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}");
         fwrite($arquivo, $class);
         //Fechamos o arquivo após escrever nele
         fclose($arquivo);

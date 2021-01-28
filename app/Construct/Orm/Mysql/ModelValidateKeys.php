@@ -29,13 +29,13 @@ class ModelValidateKeys implements ImodelValidate
                 foreach ($keys as  $value) {
                     #verifica de a cheve e primaria, se sim: adiciona validate 
                     if ($value['CONSTRAINT_NAME'] == 'PRIMARY') {
-                        $tables[$table]['validate'][$column] .= "unique:$table,$column|";
+                        $tables[$table]['validate'][$column] .= "|unique:$table,$column|";
                     }
 
                     #verifica se a chave é unica, se sim adiciona validate
                     $fk = strpos($value['CONSTRAINT_NAME'], 'UNIQUE');
                     if ($fk !== false) {
-                        $tables[$table]['validate'][$column] .= "unique:$table,$column|";
+                        $tables[$table]['validate'][$column] .= "|unique:$table,$column|";
                     }
 
                     #verifica se a cheve é extrangeira, se sim adiciona validate
@@ -50,10 +50,11 @@ class ModelValidateKeys implements ImodelValidate
                                 'foreign_key'   =>  $column
                             ]
                         );
-                        $tables[$table]['validate'][$column] .= "exists:{$value['REFERENCED_TABLE_NAME']},{$value['REFERENCED_COLUMN_NAME']}|";
+                        $tables[$table]['validate'][$column] .= "|exists:{$value['REFERENCED_TABLE_NAME']},{$value['REFERENCED_COLUMN_NAME']}|";
                     }
 
-                    $tables[$table]['validate'][$column] = substr($tables[$table]['validate'][$column], 0, -1);
+                    $tables[$table]['validate'][$column] =  preg_replace('/(^\|)|(\|$)/', '', $tables[$table]['validate'][$column]);
+                    $tables[$table]['validate'][$column] =  preg_replace('/\|\|/', '|', $tables[$table]['validate'][$column]);
                 }
 
                 #verificar se o rercuso faz referecia para outro

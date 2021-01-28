@@ -1,0 +1,24 @@
+<?php
+
+namespace {{namespace}};
+
+use App\Validate\BaseValidate;
+use App\Validate\IValidate;
+
+class {{className}} extends BaseValidate implements IValidate
+{
+
+    public function getCreateRules(): array
+    {
+        return [
+            {{getCreateRules}}
+        ];
+    }
+
+    public function getUpdateRules($id): array
+    {
+        return [
+            {{getUpdateRules}}
+        ];
+    }
+}
