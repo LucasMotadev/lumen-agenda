@@ -91,6 +91,11 @@ class ModelFile extends BaseFile implements IFile
         return $this;
     }
 
+    public function getArrStringClass(): array
+    {
+        return $this->arrStringClass;
+    }
+
 
     public function buildTemplate(): string
     {

@@ -40,10 +40,10 @@ class ValidateFile extends BaseFile implements IFile
     {
         foreach ($this->modelValidate->get() as $table => $value) {
             $this->namespace = $this->filePathToNamesape($this->relativePath);
-            $this->className = $this->snakeCaseToPascalCase($table);
+            $this->className = $this->snakeCaseToPascalCase($table).'Validate';
             $this->getCreateRules = $this->arrayToStringArray($value['validate']);
             $this->getUpdateRules = $this->arrayToStringArray($this->updateRules($value['validate']));
-            $this->filename = base_path($this->relativePath) . "/{$this->className}Validate.php";
+            $this->filename = base_path($this->relativePath) . "/{$this->className}.php";
 
             array_push($this->arrStringClass, ['class' => $this->buildTemplate(), 'filename' => $this->filename]);
             // $this->createFile($this->filename, $this->getClass());
@@ -51,6 +51,11 @@ class ValidateFile extends BaseFile implements IFile
         }
 
         return $this;
+    }
+
+    public function getArrStringClass(): array
+    {
+        return $this->arrStringClass;
     }
 
 
@@ -67,7 +72,6 @@ class ValidateFile extends BaseFile implements IFile
         $template = preg_replace('/{{getCreateRules}}/', $this->getCreateRules, $template);
         $template = preg_replace('/{{getUpdateRules}}/', $this->getUpdateRules, $template);
  
-
         return $template;
     }
 

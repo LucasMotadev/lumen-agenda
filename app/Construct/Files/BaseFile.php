@@ -2,6 +2,8 @@
 
 namespace App\Construct\Files;
 
+use Exception;
+
 abstract class BaseFile 
 {
     #snake_case to camelCase
@@ -32,10 +34,21 @@ abstract class BaseFile
         return ucfirst(str_replace('/','\\',$path));
     }
 
+    #caso o path nao exista ele é criado
+    public function fileExists($filename):void
+    {
+        $pathInfo = pathinfo($filename);
+        if(!file_exists($pathInfo['dirname'])){
+           $result =  mkdir($pathInfo['dirname']);
+            if(!$result) throw new Exception('Erro ao criar diretorio');    
+        }
+
+        if (file_exists($filename)) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}, o arquivo já existe");
+    }
 
     public function createFile(string $filename, string $class)
     {
-        if (file_exists($filename)) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}, o arquivo já existe");
+        $this->fileExists($filename);
         $arquivo = fopen($filename, 'w');
         if (!$arquivo) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}");
         fwrite($arquivo, $class);
@@ -48,7 +61,7 @@ abstract class BaseFile
     public function create()
     {
         foreach ($this->arrStringClass as $filename => $stringClass) {
-            $this->createFile($filename, $stringClass);
+            $this->createFile($stringClass['filename'] , $stringClass['class']);
         }
     }
 

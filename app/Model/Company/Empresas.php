@@ -1,6 +1,13 @@
 <?php
 
-namespace App\Model;
+/*
+|--------------------------------------------------------------------------
+| Gerado altomaticamente  by Lucas Mota
+|--------------------------------------------------------------------------
+|
+*/
+
+namespace App\Model\Company;
 
 use App\Model\BaseModel;
 
@@ -14,17 +21,20 @@ class Empresas extends BaseModel
     protected $primaryKey = "id";
 
 
-        public function pessoasJuridicas()
+        
+    public function pessoasJuridicas()
     {
         return $this->hasMany(PessoasJuridicas::class, 'id', 'pessoa_juridica_id');
     }
+    
     public function bandeira()
     {
         return $this->hasMany(Bandeira::class, 'id', 'bandeira_id');
     }
 
 
-        public function centroCustos()
+        
+    public function centroCustos()
     {
         return $this->belongsTo(CentroCustos::class, 'empresa_id', 'id');
     }

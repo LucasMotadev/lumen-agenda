@@ -7,6 +7,7 @@ use App\Construct\Model\Columns;
 use App\Construct\Model\keys;
 
 use App\Construct\Files\ModelFile;
+use App\Construct\Files\RouterFile;
 use App\Construct\Files\ValidateFile;
 use App\Construct\Orm\Mysql\InitModelValidate;
 use App\Construct\Orm\Mysql\ModelValidateKeys;
@@ -30,18 +31,31 @@ class Orm
     #exemplo app/model/empresas
     public function getClassModel($relativePath){
         $modelFile = new ModelFile($this->modelValidate, $relativePath);
-        return $modelFile->writeClass()->get() ;
+        $class = $modelFile->writeClass();
+        $class->create();
+        return $class->get();
 
-    }
-
-    public function getClassController($relativePath, $namespaceModel, $namespaceValidate = null){
-        $controllerFile = new ControllerFile($this->table, $relativePath, $namespaceModel, $namespaceValidate);
-        return $controllerFile->writeClass()->get();
     }
 
     public function getClassValidate($relativePath){
         $validateFile = new ValidateFile($this->modelValidate, $relativePath);
-        return $validateFile->writeClass()->get();
+        $class = $validateFile->writeClass();
+        $class->create();
+        return $class->get();
+    }
+
+    public function getClassController($relativePath, $namespaceModel, $namespaceValidate = null){
+        $controllerFile = new ControllerFile($this->table, $relativePath, $namespaceModel, $namespaceValidate);
+        $class = $controllerFile->writeClass();
+        $class->create();
+        return $class->get();
+    }
+
+    public function getRouter($relativePathController){
+        $router = new RouterFile($this->table, $relativePathController);
+        $class = $router->writeClass();
+        $class->create();
+        return $class->get();
     }
 
     public function getModelValidate(){

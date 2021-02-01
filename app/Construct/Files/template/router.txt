@@ -2,17 +2,17 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes by Lucas Mota
+| Gerado altomaticamente  by Lucas Mota
 |--------------------------------------------------------------------------
 |
 */
 
 $router->group(['prefix' => '{{prefix}}'], function () use ($router) {
 
-    $router->get('/',       ['uses'=> '{{filename}}@index']);
-    $router->post('/',      ['uses'=> '{{filename}}@store']);
-    $router->put('/{id}',   ['uses'=> '{{filename}}@update']);
-    $router->get('/{id}',   ['uses'=> '{{filename}}@show']);
-    $router->delete('/{id}',['uses'=> '{{filename}}@destroy']);
+    $router->get('/',       ['uses'=> '{{relativePathController}}@index']);
+    $router->post('/',      ['uses'=> '{{relativePathController}}@store']);
+    $router->put('/{id}',   ['uses'=> '{{relativePathController}}@update']);
+    $router->get('/{id}',   ['uses'=> '{{relativePathController}}@show']);
+    $router->delete('/{id}',['uses'=> '{{relativePathController}}@destroy']);
     
 });

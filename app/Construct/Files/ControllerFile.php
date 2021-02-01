@@ -5,7 +5,7 @@ namespace App\Construct\Files;
 use App\Construct\Orm\ImodelValidate;
 use Illuminate\Http\Client\Request;
 
-class ControllerFile extends BaseFile
+class ControllerFile extends BaseFile implements IFile
 {
 
     private  $namespace;
@@ -57,6 +57,11 @@ class ControllerFile extends BaseFile
         $template = preg_replace('/{{objectValidate}}/', $this->objectValidate, $template);
 
         return $template;
+    }
+
+    public function getArrStringClass(): array
+    {
+      return  $this->arrStringClass;
     }
 
     private function destroy()

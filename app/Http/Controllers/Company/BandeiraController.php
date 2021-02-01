@@ -5,17 +5,17 @@
 |--------------------------------------------------------------------------
 |
 */
-namespace {{namespace}};
+namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\BaseController;
-use {{useModel}};
-use {{useValidate}};
+use App\Model\Company\Bandeira;
+use App\Validate\Company\BandeiraValidate;
 use Illuminate\Http\Request;
 
-class {{classNameController}} extends BaseController
+class BandeiraController extends BaseController
 {
     public function __construct(Request $request)
     {
-        parent::__construct($request, new {{objectModel}}(), new {{objectValidate}}());
+        parent::__construct($request, new Bandeira(), new BandeiraValidate());
     }
 }
