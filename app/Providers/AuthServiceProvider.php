@@ -33,5 +33,6 @@ class AuthServiceProvider extends LumenServiceProvider
         $this->app['auth']->viaRequest('api', function ($request) {
             return app('auth')->setRequest($request)->user();
         });
+
     }
 }

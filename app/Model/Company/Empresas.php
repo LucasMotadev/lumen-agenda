@@ -20,6 +20,8 @@ class Empresas extends BaseModel
 
     protected $primaryKey = "id";
 
+    public $timestamps = false;
+
 
         
     public function pessoasJuridicas()

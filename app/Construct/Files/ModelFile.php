@@ -9,7 +9,7 @@ class ModelFile extends BaseFile implements IFile
     private  $namespace = '';
     private  $classNameModel = "";
     private  $table = "";
-    private  $fillabe = "";
+    private  $fillable = "";
     private  $primaryKey = "";
     private  $hasMany = '';
     private  $belongsTo = '';
@@ -30,7 +30,7 @@ class ModelFile extends BaseFile implements IFile
 
     public function setFillable(array $column)
     {
-        $this->fillabe =  "'" .  strtolower(implode("','", $column)) . "'";
+        $this->fillable =  "'" .  strtolower(implode("','", $column)) . "'";
     }
 
     public function setPrimaryKey(string $column)
@@ -104,7 +104,7 @@ class ModelFile extends BaseFile implements IFile
         $template = preg_replace('/{{namespace}}/', $this->namespace, $template);
         $template = preg_replace('/{{classNameModel}}/', $this->classNameModel, $template);
         $template = preg_replace('/{{table}}/', $this->table, $template);
-        $template = preg_replace('/{{fillabe}}/', $this->fillabe, $template);
+        $template = preg_replace('/{{fillable}}/', $this->fillable, $template);
         $template = preg_replace('/{{primaryKey}}/', $this->primaryKey, $template);
         $template = preg_replace('/{{hasMany}}/', $this->hasMany, $template);
         $template = preg_replace('/{{belongsTo}}/', $this->belongsTo, $template);
@@ -115,7 +115,7 @@ class ModelFile extends BaseFile implements IFile
     public function destroy()
     {
         $this->table = '';
-        $this->fillabe = '';
+        $this->fillable = '';
         $this->primaryKey = '';
         $this->hasMany = '';
         $this->belongsTo = '';

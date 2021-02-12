@@ -18,12 +18,11 @@ abstract class  BaseController  extends  Controller
     public $model;
     public $request;
 
-    public function __construct(Request $request, $model, IValidate $validate = null, IPolicy $policy = null)
+    public function __construct(Request $request, $model, IPolicy $policy = null)
     {
 
         $this->request = $request;
         $this->model =  $model;
-        $this->validate = $validate;
         $this->policy = $policy;
     }
 
@@ -92,8 +91,6 @@ abstract class  BaseController  extends  Controller
     public function update($id)
     {
         try {
-
-
             //validação formulario
             if (!empty($this->validate)) {
                 $rules = $this->validate->getUpdateRules($id);
@@ -109,19 +106,29 @@ abstract class  BaseController  extends  Controller
                 return response()->json(['error' => 'Recurso nao encontrado'], 401);
             }
 
-
-            // policiticas 
-            if (!empty($this->policy)) {
-                if (!($this->policy->authorize('update', $recuso))) {
-                    return response()->json(['error' => 'Usuario não autorizado'], 403);
-                }
-            }
-
             $response = $recuso->update($this->request->all());
 
             return response()->json($response, 204);
         } catch (\Exception $e) {
             return $this->responseError($e, 'Erro ao alterar dados');
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+    
+            $rules = $this->model->getDestroyRules($id);
+            $validate = Validator::make([$this->model->getPrimaryKey() => $id], $rules);
+            if ($validate->fails()) return $validate->errors();
+
+            $resource = $this->model::find($id);
+            if (is_null($resource)) {
+                return response()->json(['Erro' => 'Recurso não encontrado'], 404);
+            }
+            return response()->json($resource->delete(), 204);
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'Erro ao deletar');
         }
     }
 

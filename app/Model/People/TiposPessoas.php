@@ -7,14 +7,14 @@
 |
 */
 
-namespace App\Model\Company;
+namespace App\Model\People;
 
 use App\Model\BaseModel;
 
-class Bandeira extends BaseModel
+class TiposPessoas extends BaseModel
 {
 
-    protected $table = "bandeira";
+    protected $table = "tipos_pessoas";
 
     protected $fillable = ['id','descricao'];
 
@@ -26,9 +26,9 @@ class Bandeira extends BaseModel
     
 
         
-    public function empresas()
+    public function pessoas()
     {
-        return $this->belongsTo(Empresas::class, 'bandeira_id', 'id');
+        return $this->belongsTo(Pessoas::class, 'tipo_pessoa_id', 'id');
     }
 }
 

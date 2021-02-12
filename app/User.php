@@ -2,7 +2,7 @@
 
 namespace App;
 
-
+use App\Model\BaseModel;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -13,10 +13,11 @@ use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authorizable, Authenticatable;
     protected $table = 'users';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'email', 'apelido', 'password'
     ];

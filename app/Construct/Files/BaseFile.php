@@ -30,6 +30,10 @@ abstract class BaseFile
       return ucfirst($this->snakeCaseToCamelcase($name));
     }
 
+    public function snakeCaseToKebabCase($name){
+        return str_replace('_','-',$name);
+    }
+
     public function filePathToNamesape(string $path){
         return ucfirst(str_replace('/','\\',$path));
     }

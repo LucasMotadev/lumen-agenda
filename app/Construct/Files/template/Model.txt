@@ -16,9 +16,11 @@ class {{classNameModel}} extends BaseModel
 
     protected $table = "{{table}}";
 
-    protected $fillabe = [{{fillabe}}];
+    protected $fillable = [{{fillable}}];
 
     protected $primaryKey = "{{primaryKey}}";
+
+    public $timestamps = false;
 
 
     {{hasMany}}

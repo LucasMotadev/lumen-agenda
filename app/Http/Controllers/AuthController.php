@@ -32,7 +32,7 @@ class AuthController extends BaseController
             $credentials = ['email'=> $request->email, 'password'=> $request->password];
              
             if (!$token = Auth::attempt($credentials, true)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['error' => 'Login ou senha incorretos'], 401);
             }
             $user = User::find(Auth::user()->id);
             $user->token = $token;
@@ -40,8 +40,8 @@ class AuthController extends BaseController
     
             return $this->respondWithToken($token);
             
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'Erro ao efetuar login'], 400);
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'Erro ao efetuar login');
         }
     }
 

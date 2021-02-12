@@ -11,16 +11,9 @@
 |
 */
 $router->group(['prefix' => 'pessoas'], function () use ($router) {
-
-    $router->group(['prefix' => '{id}'], function () use ($router){
-        $router->get('fisicas', ['uses' => 'Pessoa\PessaFisicaController@index']);
-    });
-
-    $router->get('/',       'Pessoas\PessoaController@index');
-    $router->post('/',      'Pessoas\PessoaController@store');
-    $router->put('/{id}',   'Pessoas\PessoaController@update');
-    $router->get('/{id}',   'Pessoas\PessoaController@show');
-    $router->delete('/{id}','Pessoas\PessoaController@destroy');
-
-
+    $router->get('/',       'People\PessoaController@index');
+    $router->post('/',      'People\PessoaController@store');
+    $router->put('/{id}',   'People\PessoaController@update');
+    $router->get('/{id}',   'People\PessoaController@show');
+    $router->delete('/{id}','People\PessoaController@destroy');
 });

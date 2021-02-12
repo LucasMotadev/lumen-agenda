@@ -102,7 +102,12 @@ $app->routeMiddleware([
  $app->register(App\Providers\AuthServiceProvider::class);
  $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
-// $app->register(App\Providers\EventServiceProvider::class);
+
+ #class de validate
+ $app->register(App\Providers\Validate\UniqueCompositeServiceProvider::class);
+ $app->register(App\Providers\Validate\DeleteForeignServiceProvider::class);
+
+// $app->regster(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

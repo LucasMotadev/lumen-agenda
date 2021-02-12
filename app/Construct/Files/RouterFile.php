@@ -27,12 +27,13 @@ class RouterFile extends BaseFile implements IFile {
     public function writeClass(){
         $tables = explode(',', $this->tables);
         foreach ($tables as  $table) {
-            $this->prefix =  $this->snakeCaseToCamelcase($table);
-            $this->filename = base_path("routes/api/{$this->prefix}.php");
+            $this->prefix =  $this->snakeCaseToKebabCase($table);
+
+            $this->filename = base_path("routes/api/{$this->snakeCaseToCamelcase($table)}.php");
             $this->relativePathController = 
                 $this->pathControllerToRelativePathController($this->pathController) . 
                 '\\'.
-               $this->snakeCaseToPascalCase($this->prefix) . 'Controller';
+               $this->snakeCaseToPascalCase($this->snakeCaseToPascalCase($table)) . 'Controller';
             array_push($this->arrStringClass, ['class' => $this->buildTemplate(), 'filename' => $this->filename]);
             $this->destroy();
         }
