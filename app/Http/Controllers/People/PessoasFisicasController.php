@@ -16,6 +16,6 @@ class PessoasFisicasController extends BaseController
 {
     public function __construct(Request $request)
     {
-        parent::__construct($request, new PessoasFisicas(), new PessoasFisicasValidate());
+        parent::__construct($request, new PessoasFisicas());
     }
 }

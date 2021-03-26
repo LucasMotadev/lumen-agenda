@@ -17,7 +17,6 @@ class AuthController extends BaseController
     private $user;
     public function __construct()
     {
-
         $this->middleware('auth:api', ['except' => ['login','store','solicitResetPassword']]);
     }
 

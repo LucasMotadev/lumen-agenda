@@ -10,9 +10,12 @@
 namespace App\Model\People;
 
 use App\Model\BaseModel;
+use App\Validate\People\PessoasFisicasValidate;
+
 
 class PessoasFisicas extends BaseModel
 {
+    use PessoasFisicasValidate;
 
     protected $table = "pessoas_fisicas";
 

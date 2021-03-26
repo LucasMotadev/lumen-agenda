@@ -1,24 +1,23 @@
 <?php
 
-namespace App\Model;
+namespace App\Construct\Model;
 
 use App\Utils\Regex;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-abstract class BaseModel extends Model 
+abstract class BaseModel extends Model
 {
 
-    public function getPrimaryKey():string
+    public function getPrimaryKey(): string
     {
         return $this->primaryKey;
     }
-
-    public function getFillable():array
+    public function getFillable(): array
     {
         return $this->fillable;
     }
-    
+
     public function getIntersectGroupBy(string $column)
     {
 
@@ -34,7 +33,6 @@ abstract class BaseModel extends Model
 
     protected function convertStringToArray($arrayString)
     {
-        #10150,12351,21651  to [10150,12351,21651]
         if (is_array($arrayString)) return $arrayString;
         if (preg_match('/\w+,\w+/', $arrayString, $matches)) return explode(',', $arrayString);
         return $arrayString;
@@ -63,17 +61,16 @@ abstract class BaseModel extends Model
     private function whereInOrWhreBetWeen($key, $value)
     {
         if (count($value) != 2) return $this->model->whereIn($key, $value);
-
+        
         if ($this->twoPositionIsDate($value[0], $value[1])) { // as posição são datas
-
+             
             return $this->model->whereBetWeen($key, self::invetDateIfFirstLargerLast($value[0], $value[1]));
         }
 
         return  $this->model->whereIn($key, $value);
     }
 
-    private function twoPositionIsDate($firstDate, $lastDate)
-    {
+    private function twoPositionIsDate($firstDate, $lastDate){
         $regex =  new Regex();
         $regexDate = $regex->date()->get('i');
         return preg_match($regexDate, $firstDate) && preg_match($regexDate, $lastDate);

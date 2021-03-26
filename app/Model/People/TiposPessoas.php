@@ -10,9 +10,11 @@
 namespace App\Model\People;
 
 use App\Model\BaseModel;
+use App\Validate\People\TiposPessoasValidate;
 
 class TiposPessoas extends BaseModel
 {
+    use TiposPessoasValidate;
 
     protected $table = "tipos_pessoas";
 
@@ -21,9 +23,6 @@ class TiposPessoas extends BaseModel
     protected $primaryKey = "id";
 
     public $timestamps = false;
-
-
-    
 
         
     public function pessoas()

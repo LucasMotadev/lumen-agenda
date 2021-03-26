@@ -13,35 +13,34 @@ class ModelFile extends BaseFile implements IFile
     private  $primaryKey = "";
     private  $hasMany = '';
     private  $belongsTo = '';
-    
-    protected $filename; 
-    protected  $arrStringClass  = [];
+    protected $filename;
+    protected $stringClass  = [];
 
-    public function __construct(ImodelValidate $modelValidate, string $relativePath)
+    public function __construct($modelValidate, string $relativePath)
     {
-       $this->modelValidate = $modelValidate; 
-       $this->relativePath = $relativePath;
+        $this->modelValidate = $modelValidate;
+        $this->relativePath = $relativePath;
     }
 
-    public function setTable(string $table)
+    private function table()
     {
-        $this->table = strtolower($table);
+        $this->table = strtolower($this->modelValidate->table);
     }
 
-    public function setFillable(array $column)
+    private function fillable()
     {
-        $this->fillable =  "'" .  strtolower(implode("','", $column)) . "'";
+        $this->fillable =  "'" .  strtolower(implode("','", $this->modelValidate->fillable)) . "'";
     }
 
-    public function setPrimaryKey(string $column)
+    private function primaryKey()
     {
-        $this->primaryKey = strtolower($column);
+        $this->primaryKey = strtolower($this->modelValidate->primaryKey);
     }
 
-    // um para muitos ou passar o parametro where  , um use pode ter varios telefones
-    public function setHasMany(array $hasMany)
+    // um para muitos ou passar o parametro where  , um user pode ter varios telefones
+    private function hasMany()
     {
-        foreach ($hasMany as $key => $value) {
+        foreach ($this->modelValidate->hasMany as $key => $value) {
 
             $file =  $file = __DIR__ . '\template\hasMay.txt';
 
@@ -56,9 +55,9 @@ class ModelFile extends BaseFile implements IFile
     }
 
     // um para um ou um para muitos inverso, acessar o dono do telefone
-    public function setBelongsTo(array $belongsTo)
+    private function belongsTo()
     {
-        foreach ($belongsTo as $key => $value) {
+        foreach ($this->modelValidate->belongsTo as $key => $value) {
 
             $file =  $file = __DIR__ . '\template\belongsTo.txt';
 
@@ -73,29 +72,20 @@ class ModelFile extends BaseFile implements IFile
     }
 
     public function writeClass()
-    {       
-        foreach ($this->modelValidate->get() as $table => $value) {
-            $this->namespace = $this->filePathToNamesape($this->relativePath);
-            $this->classNameModel = $this->snakeCaseToPascalCase($table);
-            $this->filename = base_path($this->relativePath) . "/{$this->classNameModel}.php";
-            $this->setTable($table);
-            $this->setFillable($value['fillable']);
-            $this->setPrimaryKey($value['primaryKey']);
-            $this->setHasMany($value['hasMany']);
-            $this->setBelongsTo($value['belongsTo']);
-            array_push($this->arrStringClass, ['class'=>$this->buildTemplate(), 'filename'=> $this->filename]);
-            // $this->createFile($this->filename, $this->getClass());
-            $this->destroy();
-        }
+    {
+        $this->namespace = $this->filePathToNamesape($this->relativePath);
+        $this->classNameModel = $this->snakeCaseToPascalCase($this->modelValidate->table);
+        $this->filename = base_path($this->relativePath) . "/{$this->classNameModel}.php";
+        $this->table();
+        $this->fillable();
+        $this->primaryKey();
+        $this->hasMany();
+        $this->belongsTo();
+        
+        $this->stringClass = ['class' => $this->buildTemplate(), 'filename' => $this->filename];
 
         return $this;
     }
-
-    public function getArrStringClass(): array
-    {
-        return $this->arrStringClass;
-    }
-
 
     public function buildTemplate(): string
     {
@@ -110,16 +100,5 @@ class ModelFile extends BaseFile implements IFile
         $template = preg_replace('/{{belongsTo}}/', $this->belongsTo, $template);
 
         return $template;
-    }
-
-    public function destroy()
-    {
-        $this->table = '';
-        $this->fillable = '';
-        $this->primaryKey = '';
-        $this->hasMany = '';
-        $this->belongsTo = '';
-        $this->filename = '';
-        $this->namespace = '';
     }
 }

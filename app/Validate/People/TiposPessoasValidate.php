@@ -2,10 +2,8 @@
 
 namespace App\Validate\People;
 
-use App\Validate\BaseValidate;
-use App\Validate\IValidate;
 
-class TiposPessoasValidate extends BaseValidate implements IValidate
+trait TiposPessoasValidate 
 {
 
     public function getCreateRules(): array

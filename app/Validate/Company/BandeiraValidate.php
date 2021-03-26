@@ -5,7 +5,7 @@ namespace App\Validate\Company;
 use App\Validate\BaseValidate;
 use App\Validate\IValidate;
 
-class BandeiraValidate extends BaseValidate implements IValidate
+trait BandeiraValidate 
 {
 
     public function getCreateRules(): array
@@ -22,5 +22,10 @@ class BandeiraValidate extends BaseValidate implements IValidate
             'id' => 'unique:bandeira,id',
             'descricao' => 'string|max:45|'
         ];
+    }
+
+    public function getDestroyRules(): array
+    {
+        return [];
     }
 }

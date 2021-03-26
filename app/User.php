@@ -3,19 +3,20 @@
 namespace App;
 
 use App\Model\BaseModel;
+use App\Model\IModel;
+use App\Validate\IValidate;
+use App\Validate\UserValidate;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Events\Validated;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, IValidate
 {
-    use Authorizable, Authenticatable;
+    use Authorizable, Authenticatable , UserValidate;
     protected $table = 'users';
     protected $primaryKey = 'id';
     protected $fillable = [

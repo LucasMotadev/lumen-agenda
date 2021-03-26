@@ -2,9 +2,7 @@
 
 namespace App\Construct\Model;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Tables extends Model
+class Tables extends BaseModel
 {
     protected $table = 'information_schema.tables';
     protected $primaryKey = 'table_name';

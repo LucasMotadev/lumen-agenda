@@ -3,12 +3,11 @@
 namespace App\Validate;
 
 
-class UserValidate extends BaseValidate implements IValidate
+trait UserValidate
 {
 
     public function getCreateRules(): array
     {
-        
         return [
             'email' => 'required|unique:users,email',
             'apelido' => 'required',
@@ -17,6 +16,11 @@ class UserValidate extends BaseValidate implements IValidate
     }
 
     public function getUpdateRules($id): array
+    {
+        return [];
+    }
+
+    public function getDestroyRules(): array 
     {
         return [];
     }

@@ -2,9 +2,6 @@
 
 namespace App\Validate\People;
 
-use App\Validate\BaseValidate;
-use App\Validate\IValidate;
-
 trait PessoaValidate 
 {
 
@@ -22,7 +19,8 @@ trait PessoaValidate
         ];
     }
 
-    public function getDestroyRules(){
+    public function getDestroyRules(): array
+    {
         return [
             'id' => 'delete_foreign:pessoas_fisicas,pessoa_id,pessoas_juridicas,pessoa_id'          
         ];

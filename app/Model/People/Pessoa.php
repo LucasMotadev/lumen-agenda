@@ -3,11 +3,12 @@
 namespace App\Model\People;
 
 use App\Model\BaseModel;
+use App\Validate\IValidate;
 use App\Validate\People\PessoaValidate;
 use Exception;
 
 
-class Pessoa extends BaseModel
+class Pessoa extends BaseModel implements IValidate
 {
     use PessoaValidate;
 
