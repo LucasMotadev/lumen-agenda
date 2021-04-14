@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Gerado altomaticamente  by Lucas Mota
+| Gerado altomaticamente por engenharia reversa by @Lucas Mota
 |--------------------------------------------------------------------------
 |
 */

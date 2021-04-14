@@ -16,6 +16,6 @@ class {{classNameController}} extends BaseController
 {
     public function __construct(Request $request)
     {
-        parent::__construct($request, new {{objectModel}}(), new {{objectValidate}}());
+        parent::__construct($request, new {{objectModel}}());
     }
 }

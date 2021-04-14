@@ -13,7 +13,6 @@ class ConstructHasMany
     {
         $tableTakesReferences = keys::tableTakesReference($value['TABLE_NAME'], $value['COLUMN_NAME']);
         if (!is_null($tableTakesReferences)) {
-
             $tableTakesReference = $tableTakesReferences->toArray();
             array_push(
                 $this->hasMany,

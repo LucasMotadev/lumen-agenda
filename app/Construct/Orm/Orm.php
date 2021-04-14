@@ -6,22 +6,23 @@ use App\Construct\Files\ControllerFile;
 use App\Construct\Files\ModelFile;
 use App\Construct\Files\RouterFile;
 use App\Construct\Files\ValidateFile;
-use App\Construct\Orm\Mysql\InitModelValidate;
+use App\Construct\Orm\Mysql\InitModelEndValidate;
 class Orm
 {
-    private $modelValidate;
-    public function __construct($table = null)
+    private $modelEndValidate;
+    public function __construct($table)
     {
         $this->table = $table;
     }
     public function mysql()
     {
-        $this->modelValidate = new InitModelValidate($this->table);
+        $this->modelEndValidate = new InitModelEndValidate($this->table);
         return $this;
     }
 
-    public function getClassModel($relativePath){
-        $modelFile = new ModelFile($this->modelValidate, $relativePath);
+    public function getClassModel($filename){
+
+        $modelFile = new ModelFile($this->modelEndValidate, $filename);
         $class = $modelFile->writeClass();
         $class->create();
         return $class->get();

@@ -16,10 +16,10 @@ class ModelFile extends BaseFile implements IFile
     protected $filename;
     protected $stringClass  = [];
 
-    public function __construct($modelValidate, string $relativePath)
+    public function __construct($modelValidate, string $filename)
     {
         $this->modelValidate = $modelValidate;
-        $this->relativePath = $relativePath;
+        $this->filename = $filename;
     }
 
     private function table()
@@ -73,9 +73,8 @@ class ModelFile extends BaseFile implements IFile
 
     public function writeClass()
     {
-        $this->namespace = $this->filePathToNamesape($this->relativePath);
+        $this->namespace = $this->filePathToNamesape($this->filename);
         $this->classNameModel = $this->snakeCaseToPascalCase($this->modelValidate->table);
-        $this->filename = base_path($this->relativePath) . "/{$this->classNameModel}.php";
         $this->table();
         $this->fillable();
         $this->primaryKey();

@@ -81,7 +81,7 @@ abstract class BaseModel extends Model
 
     private static function invetDateIfFirstLargerLast($firstDate, $lastDate)
     {
-        if (strtotime($firstDate) > strtotime($lastDate)) { // a data menor primeiro
+        if (strtotime($firstDate) > strtotime($lastDate)) {
             $aux = $lastDate;
             $lastDate = $firstDate;
             $firstDate = $aux;

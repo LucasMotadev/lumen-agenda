@@ -15,10 +15,10 @@ abstract class BaseFile
 
             if ($key === 0) {
                 $newName = $value;
-            } else {
-
-                $newName .= ucfirst($value);
+                continue;
             }
+
+            $newName .= ucfirst($value);
         }
 
         return $newName;
@@ -36,28 +36,26 @@ abstract class BaseFile
 
     public function filePathToNamesape(string $path)
     {
-        return ucfirst(str_replace('/', '\\', $path));
+        preg_match('/app.*(?=\\\\)/i', $path, $nameSpace);
+        return ucfirst(str_replace('/', '\\', $nameSpace[0]));
     }
 
-    #caso o path nao exista ele é criado
-    public function fileExists($filename): void
+    public function dirExiste($filename)
     {
         $pathInfo = pathinfo($filename);
-        if (!file_exists($pathInfo['dirname'])) {
-            $result =  mkdir($pathInfo['dirname']);
-            if (!$result) throw new Exception('Erro ao criar diretorio');
-        }
 
-        if (file_exists($filename)) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}, o arquivo já existe");
+        if (file_exists($pathInfo['dirname']))  return;
+        $result =  mkdir($pathInfo['dirname']);
+        if (!$result) throw new Exception('Erro ao criar diretorio');
+        
     }
 
     public function createFile(string $filename, string $class)
     {
-        $this->fileExists($filename);
+        $this->dirExiste($filename);
         $arquivo = fopen($filename, 'w');
         if (!$arquivo) throw new \Exception("Erro ao criar Class  {$this->snakeCaseToPascalCase($filename)}");
         fwrite($arquivo, $class);
-        //Fechamos o arquivo após escrever nele
         fclose($arquivo);
 
         return $filename;
@@ -68,7 +66,7 @@ abstract class BaseFile
         $this->createFile($this->stringClass['filename'], $this->stringClass['class']);
     }
 
-    public function get():array
+    public function get(): array
     {
         return $this->stringClass;
     }

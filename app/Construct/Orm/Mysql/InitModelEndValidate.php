@@ -5,7 +5,7 @@ namespace App\Construct\Orm\Mysql;
 use App\Construct\Model\Columns;
 
 
-class InitModelValidate
+class InitModelEndValidate
 {
     public $table;
     
@@ -18,6 +18,8 @@ class InitModelValidate
     public function init()
     {
         $columns = Columns::featColumnsAndTypeTable($this->table);
+        if(empty($columns)) exit('Table not exist');
+
         $validate = new ConstructValidate();
         $primaryKey = new ConstructPrimaryKey();
         $fillable = new ConstructFillable();
